@@ -312,7 +312,7 @@ def f_scoreboard(_s_screen, _fps_clock, _fps):  # 计分板画面
 		_s_screen.fill(THECOLORS["white"])
 		_s_screen.blit(sf_arial_scoreboad, (65, 4))
 		_s_screen.blit(sf_small_arial_back, (100, 40))
-		for i in range(0, len(scores) - 1):  # 填充排行榜
+		for i in range(0, len(scores)):  # 填充排行榜
 			_s_screen.blit(Lsf_small_arial_numbers_black[i + 1], (130, 60 + 15 * i))
 			_s_screen.blit(sf_small_arial_dot, (137, 60 + 15 * i))
 			f_show_number(_s_screen, scores[i], (150, 60 + 15 * i))
