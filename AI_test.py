@@ -30,3 +30,4 @@ while True:
 	if S.deadflag:
 		print("Dead.")
 		break
+		

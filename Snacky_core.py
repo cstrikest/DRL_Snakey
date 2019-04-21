@@ -16,7 +16,7 @@ class Snakey(object):
 		self.snakes = [[0, 0]] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
-		self.food_pos = [randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10, randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10]
+		self.food_pos = [randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10, randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10]  # 食物坐标
 		self.diffculty_counter = 0  # 难度计数
 		self.ate = 0  # 食物计数
 		self.level = 0  # 难度
@@ -29,7 +29,7 @@ class Snakey(object):
 		:return: 返回详细信息
 		"""
 		
-		if direction == "W" and self.direction != "S":  # 自动前进
+		if direction == "W" and self.direction != "S":
 			self.direction = "W"
 		if direction == "S" and self.direction != "W":
 			self.direction = "S"
