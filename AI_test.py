@@ -4,18 +4,29 @@ __author__ = "Yxzh"
 
 from Snacky_core import Snakey
 from time import sleep
-from random import randrange
+
 
 S = Snakey()
-d = ["W", "S", "A", "D"]
-def fd():
-	while True:
-		for i in range(0, 4):
-			yield d[i]
-			
-S.start()
+
 while True:
-	print(S.next("D"))
-	sleep(0.2)
+	Hs = S.pos[0] - S.food_pos[0]  # 横向差值
+	Vs = S.pos[1] - S.food_pos[1]  # 纵向差值
+	
+	if abs(Hs) > abs(Vs):
+		if Hs < 0:
+			print("D")
+			print(S.next("D"))
+		else:
+			print("A")
+			print(S.next("A"))
+	else:
+		if Vs < 0:
+			print("S")
+			print(S.next("S"))
+		else:
+			print("W")
+			print(S.next("W"))
+	
 	if S.deadflag:
+		print("Dead.")
 		break
