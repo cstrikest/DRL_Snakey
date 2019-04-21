@@ -5,13 +5,13 @@ Python版本 Python3.6
 
 依赖库
 
-- pygame
+- pygame 1.9.5
+- tensorflow
 
-## 游戏部分
-
-### 使用说明
+## 游戏部分说明
 
 #### Snacky_UI.py
+![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
 提供了一个可以供人类游玩的贪吃蛇游戏UI。游戏素材图片比较简陋。游戏内容设有等级划分，随着获取食物的数量上升，蛇前进的速度会变快。
 
@@ -24,6 +24,8 @@ Python版本 Python3.6
 使用WSAD控制移动方向，任何时候都可以使用Q键退出。
 
 游戏结束画面按R重新开始，按S则会跳出计分板。
+
+![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
 
 #### Snacky_core.py
 
@@ -39,7 +41,14 @@ Python版本 Python3.6
 
 一个简单的演示用AI，完全无视炸弹与自身碰撞，只吃食物。
 
+#### AI_core_ML.py
+
+基于tensorflow的机械学习AI。详细内容将在后文说明。
+
 #### AI_test.py
 
 测试Snacky_core的小脚本。
 
+## ML部分
+
+...
