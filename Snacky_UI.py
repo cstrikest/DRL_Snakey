@@ -229,6 +229,7 @@ def f_show_number(surface, number, position):
 	:param number: 数字
 	:param position: 位置
 	"""
+	
 	surface.blit(Lsf_small_arial_numbers_black[int(number / 100)], (position[0], position[1]))
 	surface.blit(Lsf_small_arial_numbers_black[int((number % 100) / 10)], (position[0] + 7, position[1]))
 	surface.blit(Lsf_small_arial_numbers_black[int((number % 100) % 10)], (position[0] + 14, position[1]))
@@ -241,6 +242,7 @@ def f_gamestart(_s_screen, _fps_clock, _fps):
 	:param _fps_clock: FPS时钟对象
 	:param _fps: FPS
 	"""
+	
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_q):  # 退出事件
@@ -267,6 +269,7 @@ def f_gameover(_s_screen, _fps_clock, _fps, ate):
 	:param _fps: FPS
 	:param ate: 食物计数
 	"""
+	
 	fi_score = open("score.s", "a+")  # 将分数写入分数文件 不存在就新建
 	fi_score.write(str(ate) + "\n")
 	fi_score.close()  # 关闭文件IO流
@@ -298,6 +301,7 @@ def f_scoreboard(_s_screen, _fps_clock, _fps):  # 计分板画面
 	:param _fps_clock: FPS时钟对象
 	:param _fps: FPS
 	"""
+	
 	fi_score = open("score.s", "r")  # 读取分数文件
 	scores = []
 	for i in fi_score.readlines():  # 转换为int
