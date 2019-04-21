@@ -81,7 +81,7 @@ def main():
 	diffculty = [14, 12, 10, 8, 6, 5, 4, 3, 2, 1, 0]  # 难度表 越难空闲帧越少
 	deadflag = False  # 死亡判定
 	
-	f_gamestart(s_screen, fps_clock, fps)  # 开始游戏画面
+	f_gamestart(s_screen, fps_clock)  # 开始游戏画面
 	
 	while True:  # 屏幕循环
 		for event in pygame.event.get():  # 事件循环
@@ -203,7 +203,7 @@ def main():
 			c_frame = 0  # 更新计数器
 			
 			if deadflag:  # 死亡判定
-				f_gameover(s_screen, fps_clock, fps, ate)  # 游戏结束画面
+				f_gameover(s_screen, fps_clock, ate)  # 游戏结束画面
 				return
 		
 			
@@ -235,7 +235,7 @@ def f_show_number(surface, number, position):
 	surface.blit(Lsf_small_arial_numbers_black[int((number % 100) % 10)], (position[0] + 14, position[1]))
 	return
 
-def f_gamestart(_s_screen, _fps_clock, _fps):
+def f_gamestart(_s_screen, _fps_clock):
 	"""
 	游戏开始画面
 	:param _s_screen: 屏幕Surface
@@ -249,7 +249,7 @@ def f_gamestart(_s_screen, _fps_clock, _fps):
 				pygame.quit()
 				sys.exit()
 			if event.type == pygame.KEYDOWN and event.key == K_s:  # 进入计分板画面
-				f_scoreboard(_s_screen, _fps_clock, _fps)
+				f_scoreboard(_s_screen, _fps_clock)
 			if event.type == pygame.KEYDOWN and event.key == K_SPACE:  # 进入main()函数
 				return
 		
@@ -259,9 +259,9 @@ def f_gamestart(_s_screen, _fps_clock, _fps):
 		_s_screen.blit(sf_small_arial_gamestart, (62, 52))
 		_s_screen.blit(sf_small_arial_scoreboard, (62, 70))
 		pygame.display.flip()
-		_fps_clock.tick(_fps)
+		_fps_clock.tick(5)
 
-def f_gameover(_s_screen, _fps_clock, _fps, ate):
+def f_gameover(_s_screen, _fps_clock, ate):
 	"""
 	游戏结束画面
 	:param _s_screen: 屏幕Surface
@@ -273,13 +273,14 @@ def f_gameover(_s_screen, _fps_clock, _fps, ate):
 	fi_score = open("score.s", "a+")  # 将分数写入分数文件 不存在就新建
 	fi_score.write(str(ate) + "\n")
 	fi_score.close()  # 关闭文件IO流
+	
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
 				pygame.quit()
 				sys.exit()
 			if event.type == pygame.KEYDOWN and event.key == K_s:  # 进入计分板画面
-				f_scoreboard(_s_screen, _fps_clock, _fps)
+				f_scoreboard(_s_screen, _fps_clock)
 				return
 			if event.type == pygame.KEYDOWN and event.key == K_r:  # 重新开始
 				return
@@ -292,9 +293,9 @@ def f_gameover(_s_screen, _fps_clock, _fps, ate):
 		_s_screen.blit(si_deadsnake, (80, 75))
 		f_show_number(_s_screen, ate, (150, 35))  # 填充该局得分
 		pygame.display.flip()
-		_fps_clock.tick(_fps)
+		_fps_clock.tick(5)
 
-def f_scoreboard(_s_screen, _fps_clock, _fps):  # 计分板画面
+def f_scoreboard(_s_screen, _fps_clock):  # 计分板画面
 	"""
 	计分板画面
 	:param _s_screen: 屏幕Surface
@@ -327,8 +328,8 @@ def f_scoreboard(_s_screen, _fps_clock, _fps):  # 计分板画面
 			if i > 7:
 				break
 		pygame.display.flip()
-		_fps_clock.tick(_fps)
-
+		_fps_clock.tick(5)
+		
 if __name__ == "__main__":  # 程序入口
 	while True:
 		main()
