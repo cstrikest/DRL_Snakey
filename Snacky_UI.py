@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+__author__ = "Yxzh"
+
 import pygame
 import sys
 from pygame.locals import *
@@ -122,7 +126,7 @@ def main():
 			if pos_y > PLAYGROUND_HEIGHT - 10:
 				pos_y = 0
 			
-			del (snakes[0])  # 删除蛇数组顶
+			del(snakes[0])  # 删除蛇数组顶
 			
 			if (pos_x, pos_y) in snakes:  # 自身碰撞检测
 				deadflag = True  # 触发死亡判定
