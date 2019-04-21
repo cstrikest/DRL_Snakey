@@ -233,7 +233,6 @@ def f_gamestart(_s_screen, _fps_clock):
 	游戏开始画面
 	:param _s_screen: 屏幕Surface
 	:param _fps_clock: FPS时钟对象
-	:param _fps: FPS
 	"""
 	
 	while True:
@@ -259,7 +258,6 @@ def f_gameover(_s_screen, _fps_clock, ate):
 	游戏结束画面
 	:param _s_screen: 屏幕Surface
 	:param _fps_clock: FPS时钟对象
-	:param _fps: FPS
 	:param ate: 食物计数
 	"""
 	
@@ -293,7 +291,6 @@ def f_scoreboard(_s_screen, _fps_clock):  # 计分板画面
 	计分板画面
 	:param _s_screen: 屏幕Surface
 	:param _fps_clock: FPS时钟对象
-	:param _fps: FPS
 	"""
 	
 	fi_score = open("score.s", "r")  # 读取分数文件
