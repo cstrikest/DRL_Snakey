@@ -8,7 +8,7 @@ PLAYGROUND_WIDTH = 200
 PLAYGROUND_HEIGHT = 200  # 游戏区域大小
 l = ["W", "S", "A", "D"]
 
-def next(direction, pos):
+def next(direction, pos):  # 预测下一步位置
 	x = pos[0]
 	y = pos[1]
 	
@@ -32,7 +32,7 @@ def next(direction, pos):
 	
 	return (x, y)
 
-def elude(pos, snakes):
+def elude(pos, snakes):  # 躲避
 	if next(l[0], pos) not in snakes:
 		temp = l[0]
 	elif next(l[1], pos) not in snakes:
@@ -45,7 +45,7 @@ def elude(pos, snakes):
 		temp = l[random.randrange(0, 4)]
 	return temp
 
-def get_next_direction(pos, food_pos, snakes):
+def get_next_direction(pos, food_pos, snakes):  # 追寻食物
 	Hs = pos[0] - food_pos[0]  # 横向差值
 	Vs = pos[1] - food_pos[1]  # 纵向差值
 	
