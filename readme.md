@@ -42,18 +42,22 @@ Python版本 Python3.6
 
 #### AI_core_logic.py AI_core_logic_test.py
 
-一个简单的演示用AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。经过测试(AI_core_logic_test.py)，此AI在10000次尝试中最好成绩为101，
+一个简单的演示用AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。
+
+经过测试(AI_core_logic_test.py)，此AI在10000次尝试中最好成绩为101，
 平均值为47.8496。平均每局游戏耗时0.00888秒。
 
 ![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/2.gif?raw=true)
 
-#### AI_core_ML.py
+#### AI_core_ML.py AI_core_ML_test.py
 
-基于tensorflow的机械学习AI。详细内容将在后文说明。
+基于tensorflow.keras的机械学习AI。目前尚未完成，详细内容将在以后说明。
 
 #### training.py
 
-AI模型训练。
+目前尚未完成，用于AI模型训练。
+
+设想：使用强化学习，目标为给定步数内的最高得分。训练先在无炸弹的条件下进行。
 
 ## ML部分
 
