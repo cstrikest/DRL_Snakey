@@ -4,6 +4,8 @@ __author__ = "Yxzh"
 
 import pygame
 import sys
+import AI_core_logic
+import AI_core_ML
 from pygame.locals import *
 from pygame.color import THECOLORS
 import pygame.font
@@ -67,8 +69,7 @@ def main():
 	fps = 60  # 帧率
 	pos_x = 0  # 蛇头位置
 	pos_y = 0
-	button = "S"  # 按键寄存
-	direction = "S"  # 蛇头方向
+	old_direction = "S"  # 当前蛇头方向
 	snakes = [(0, 0)] * 2  # 蛇数组
 	isfood = False  # 食物判定
 	bombs = []  # 炸弹数组
@@ -76,7 +77,7 @@ def main():
 	food_pos_y = 0
 	diffculty_counter = 0  # 难度计数
 	ate = 0  # 食物计数
-	level = 0  # 难度
+	level = 10 # 难度
 	c_frame = 0  # 空闲帧数计数器
 	diffculty = [14, 12, 10, 8, 6, 5, 4, 3, 2, 1, 0]  # 难度表 越难空闲帧越少
 	deadflag = False  # 死亡判定
@@ -88,33 +89,27 @@ def main():
 			if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
 				pygame.quit()
 				sys.exit()
-			if event.type == KEYDOWN and event.key == K_s:  # 按键事件 调整按键寄存
-				button = "S"
-			if event.type == KEYDOWN and event.key == K_d:
-				button = "D"
-			if event.type == KEYDOWN and event.key == K_w:
-				button = "W"
-			if event.type == KEYDOWN and event.key == K_a:
-				button = "A"
-		
+				
 		if c_frame >= diffculty[level]:  # 根据难度判断空闲帧 最高难度无空闲帧
-			if button == "W" and direction != "S":  # 根据按键寄存调整行进方向 （不直接使用按键事件更改方向的原因是因为直接更改方向的话
-				# 会发生一次循环内按下多个按键导致无法正常处理行进方向的bug）
-				direction = "W"
-			if button == "S" and direction != "W":
-				direction = "S"
-			if button == "A" and direction != "D":
-				direction = "A"
-			if button == "D" and direction != "A":
-				direction = "D"
 			
-			if direction == "W":  # 自动前进
+			direction = AI_core_logic.get_next_direction([pos_x, pos_y], [food_pos_x, food_pos_y], snakes)  # 获取下一步方向
+			
+			if direction == "W" and old_direction != "S":
+				old_direction = "W"
+			if direction == "S" and old_direction != "W":
+				old_direction = "S"
+			if direction == "A" and old_direction != "D":
+				old_direction = "A"
+			if direction == "D" and old_direction != "A":
+				old_direction = "D"
+				
+			if old_direction == "W":  # 自动前进
 				pos_y -= 10
-			if direction == "S":
+			if old_direction == "S":
 				pos_y += 10
-			if direction == "A":
+			if old_direction == "A":
 				pos_x -= 10
-			if direction == "D":
+			if old_direction == "D":
 				pos_x += 10
 			
 			if pos_x < 0:  # 碰到屏幕边缘循环
@@ -126,7 +121,7 @@ def main():
 			if pos_y > PLAYGROUND_HEIGHT - 10:
 				pos_y = 0
 			
-			del(snakes[0])  # 删除蛇数组顶
+			del(snakes[0])
 			
 			if (pos_x, pos_y) in snakes:  # 自身碰撞检测
 				deadflag = True  # 触发死亡判定
@@ -155,8 +150,8 @@ def main():
 				
 				isfood = True
 			
-			if (pos_x, pos_y) in bombs:  # 炸弹碰撞检测
-				deadflag = True
+			# if (pos_x, pos_y) in bombs:  # 炸弹碰撞检测
+			# 	deadflag = True
 			
 			if pos_x == food_pos_x and pos_y == food_pos_y:  # 吃食物事件
 				snakes.append((pos_x, pos_y))  # 将当前位置推入蛇数组
@@ -165,7 +160,7 @@ def main():
 				isfood = False
 			
 			if diffculty_counter > 4:  # 难度调整
-				if level < len(diffculty):
+				if level < len(diffculty) - 1:
 					level += 1
 					diffculty_counter = 0
 			
@@ -173,8 +168,8 @@ def main():
 			
 			s_screen.blit(si_food, (food_pos_x - 4, food_pos_y - 5))  # 填充食物图片
 			
-			for i in bombs:  # 填充炸弹图片
-				s_screen.blit(si_bomb, ((i[0] - 2), (i[1] - 2)))
+			# for i in bombs:  # 填充炸弹图片
+			# 	s_screen.blit(si_bomb, ((i[0] - 2), (i[1] - 2)))
 			
 			for i in snakes:  # 填充蛇图片
 				s_screen.blit(si_snake, i)
@@ -199,18 +194,17 @@ def main():
 			
 			s_screen.blit(s_infoarea, (PLAYGROUND_WIDTH, 0))  # 信息Surface填充至屏幕Surface
 			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
-
+			
 			c_frame = 0  # 更新计数器
 			
 			if deadflag:  # 死亡判定
 				f_gameover(s_screen, fps_clock, ate)  # 游戏结束画面
 				return
 		
-			
 		c_frame += 1  # 迭代计数器
 		
 		s_infoarea.blit(s_gray, (65, 80))  # 填充实时刷新块（灰色背景）
-		s_infoarea.blit(Lsf_small_arial_direction[button], (65, 80))  # 填充按键寄存
+		s_infoarea.blit(Lsf_small_arial_direction[old_direction], (65, 80))  # 填充按键寄存
 		
 		current_fps = fps_clock.get_fps() * 10  # 获取实时FPS
 		s_infoarea.blit(Lsf_small_arial_numbers_black[int(current_fps / 100)], (65, 95))  # 填充FPS
@@ -240,7 +234,6 @@ def f_gamestart(_s_screen, _fps_clock):
 	游戏开始画面
 	:param _s_screen: 屏幕Surface
 	:param _fps_clock: FPS时钟对象
-	:param _fps: FPS
 	"""
 	
 	while True:
@@ -266,7 +259,6 @@ def f_gameover(_s_screen, _fps_clock, ate):
 	游戏结束画面
 	:param _s_screen: 屏幕Surface
 	:param _fps_clock: FPS时钟对象
-	:param _fps: FPS
 	:param ate: 食物计数
 	"""
 	
@@ -300,7 +292,6 @@ def f_scoreboard(_s_screen, _fps_clock):  # 计分板画面
 	计分板画面
 	:param _s_screen: 屏幕Surface
 	:param _fps_clock: FPS时钟对象
-	:param _fps: FPS
 	"""
 	
 	fi_score = open("score.s", "r")  # 读取分数文件
@@ -329,7 +320,8 @@ def f_scoreboard(_s_screen, _fps_clock):  # 计分板画面
 				break
 		pygame.display.flip()
 		_fps_clock.tick(5)
-		
+
 if __name__ == "__main__":  # 程序入口
 	while True:
 		main()
+
