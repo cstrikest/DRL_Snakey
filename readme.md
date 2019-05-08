@@ -40,7 +40,8 @@ Python版本 Python3.6
 
 #### AI_core_logic.py
 
-一个简单的演示用AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。
+一个简单的演示用AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。经过测试(AI_core_logic_test.py)，此AI在10000次尝试中最好成绩为101，
+平均值为47.8496。平均每局游戏耗时0.00888秒。
 
 ![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/2.gif?raw=true)
 
