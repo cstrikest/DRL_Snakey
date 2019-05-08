@@ -11,7 +11,7 @@ PLAYGROUND_HEIGHT = 200  # 游戏区域大小
 class Snakey(object):
 	
 	def __init__(self, bomb = 1):
-		self.bomb_number = bomb
+		self.bomb_number = bomb  # 炸弹个数
 		self.pos = [0, 0]  # 蛇头位置
 		self.direction = "S"  # 上一步蛇头方向
 		self.snakes = [(0, 0)] * 2  # 蛇数组
