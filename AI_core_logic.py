@@ -43,8 +43,6 @@ def elude(pos, snakes):
 		temp = l[3]
 	else:
 		temp = l[random.randrange(0, 4)]
-		print("GOODBYE!")
-	
 	return temp
 
 def get_next_direction(pos, food_pos, snakes):
