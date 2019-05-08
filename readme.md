@@ -34,11 +34,13 @@ Python版本 Python3.6
 
 #### Snakey_UI_AI_interface.py
 
-非人类玩家的游戏UI，通过AI_core_logic.py中get_next_direction()来获取下一步的方向信息。
+非人类玩家的游戏UI，目前是通过AI_core_logic.py中get_next_direction()来获取下一步的方向信息。
 
 之后还会使用通过神经网络训练出的模型进行游戏控制。
 
-#### AI_core_logic.py
+现阶段可直接运行此脚本观看基于AI_core_logic.py的AI游戏过程。
+
+#### AI_core_logic.py AI_core_logic_test.py
 
 一个简单的演示用AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。经过测试(AI_core_logic_test.py)，此AI在10000次尝试中最好成绩为101，
 平均值为47.8496。平均每局游戏耗时0.00888秒。
