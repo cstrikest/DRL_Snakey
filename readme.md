@@ -10,7 +10,7 @@ Python版本 Python3.6
 
 ## 游戏部分说明
 
-#### Snacky_UI.py
+#### Snakey_UI.py
 
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
@@ -28,11 +28,11 @@ Python版本 Python3.6
 
 ![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
 
-#### Snacky_core.py
+#### Snakey_core.py
 
 为了给模型训练加快速度的游戏核心逻辑类。只保留游戏规则，舍弃所有UI相关，提升训练时的速度。
 
-#### Snacky_UI_AI_interface.py
+#### Snakey_UI_AI_interface.py
 
 非人类玩家的游戏UI，通过AI_core_logic.py中get_next_direction()来获取下一步的方向信息。
 
@@ -48,9 +48,9 @@ Python版本 Python3.6
 
 基于tensorflow的机械学习AI。详细内容将在后文说明。
 
-#### AI_test.py
+#### training.py
 
-测试Snacky_core的小脚本。
+AI模型训练。
 
 ## ML部分
 
