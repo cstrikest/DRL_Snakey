@@ -12,8 +12,8 @@ import pygame.font
 from random import randint
 
 
-PLAYGROUND_WIDTH = 200
-PLAYGROUND_HEIGHT = 200  # 游戏区域大小
+PLAYGROUND_WIDTH = 20
+PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 INFOAREA_WIDTH = 100
 INFOAREA_HEIGHT = 200  # 信息区域大小
 WINDOW_TITLE = "Snacky"  # 屏幕标题
@@ -22,10 +22,10 @@ pygame.init()  # 初始化pygame
 pygame.display.set_caption(WINDOW_TITLE)  # 窗口标题
 fps_clock = pygame.time.Clock()  # 创建FPS时钟对象
 pygame.event.set_allowed(allowed_event)  # 设置事件过滤
-s_screen = pygame.display.set_mode((PLAYGROUND_WIDTH + INFOAREA_WIDTH, PLAYGROUND_HEIGHT), 0, 32)  # 屏幕Surface
+s_screen = pygame.display.set_mode((PLAYGROUND_WIDTH * 10 + INFOAREA_WIDTH, PLAYGROUND_HEIGHT * 10), 0, 32)  # 屏幕Surface
 # s_screen = pygame.display.set_mode((PLAYGROUND_WIDTH + INFOAREA_WIDTH, PLAYGROUND_HEIGHT),pygame.FULLSCREEN , 0, 32)  # 全屏屏幕Surface
 
-s_infoarea = pygame.Surface((PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT), 0, 32)  # 信息区域Surface
+s_infoarea = pygame.Surface((PLAYGROUND_WIDTH * 10, PLAYGROUND_HEIGHT * 10), 0, 32)  # 信息区域Surface
 s_gray = pygame.Surface((35, 37), 0, 32)  # 信息区域灰色实时刷新块
 s_gray.fill(THECOLORS["gray"])
 r_fast_update = pygame.Rect((65, 80), (100, 117))  # 信息区域实时刷新范围
@@ -77,7 +77,7 @@ def main():
 	food_pos_y = 0
 	diffculty_counter = 0  # 难度计数
 	ate = 0  # 食物计数
-	level = 10 # 难度
+	level = 10  # 难度
 	c_frame = 0  # 空闲帧数计数器
 	diffculty = [14, 12, 10, 8, 6, 5, 4, 3, 2, 1, 0]  # 难度表 越难空闲帧越少
 	deadflag = False  # 死亡判定
@@ -89,7 +89,7 @@ def main():
 			if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
 				pygame.quit()
 				sys.exit()
-				
+		
 		if c_frame >= diffculty[level]:  # 根据难度判断空闲帧 最高难度无空闲帧
 			
 			direction = AI_core_logic.get_next_direction([pos_x, pos_y], [food_pos_x, food_pos_y], snakes)  # 获取下一步方向
@@ -102,26 +102,26 @@ def main():
 				old_direction = "A"
 			if direction == "D" and old_direction != "A":
 				old_direction = "D"
-				
+			
 			if old_direction == "W":  # 自动前进
-				pos_y -= 10
+				pos_y -= 1
 			if old_direction == "S":
-				pos_y += 10
+				pos_y += 1
 			if old_direction == "A":
-				pos_x -= 10
+				pos_x -= 1
 			if old_direction == "D":
-				pos_x += 10
+				pos_x += 1
 			
 			if pos_x < 0:  # 碰到屏幕边缘循环
-				pos_x = PLAYGROUND_WIDTH - 10
-			if pos_x > PLAYGROUND_WIDTH - 10:
+				pos_x = PLAYGROUND_WIDTH - 1
+			if pos_x > PLAYGROUND_WIDTH - 1:
 				pos_x = 0
 			if pos_y < 0:
-				pos_y = PLAYGROUND_HEIGHT - 10
-			if pos_y > PLAYGROUND_HEIGHT - 10:
+				pos_y = PLAYGROUND_HEIGHT - 1
+			if pos_y > PLAYGROUND_HEIGHT - 1:
 				pos_y = 0
 			
-			del(snakes[0])
+			del (snakes[0])
 			
 			if (pos_x, pos_y) in snakes:  # 自身碰撞检测
 				deadflag = True  # 触发死亡判定
@@ -129,24 +129,24 @@ def main():
 			snakes.append((pos_x, pos_y))  # 推入蛇数组底
 			
 			if len(bombs) < level:  # 根据难度刷新炸弹
-				bomb_pos_x = randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10
-				bomb_pos_y = randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10
+				bomb_pos_x = randint(0, PLAYGROUND_WIDTH - 1)
+				bomb_pos_y = randint(0, PLAYGROUND_HEIGHT - 1)
 				
 				while ((bomb_pos_x, bomb_pos_y) in snakes) or (
 								  food_pos_x == bomb_pos_x or food_pos_y == bomb_pos_y) or (
 								  (bomb_pos_x, bomb_pos_y) in bombs):  # 避免与蛇和食物和其他炸弹重叠刷新
-					bomb_pos_x = randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10
-					bomb_pos_y = randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10
+					bomb_pos_x = randint(0, PLAYGROUND_WIDTH - 1)
+					bomb_pos_y = randint(0, PLAYGROUND_HEIGHT - 1)
 				
 				bombs.append((bomb_pos_x, bomb_pos_y))
 			
 			if not isfood:  # 根据食物判定刷新食物
-				food_pos_x = randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10
-				food_pos_y = randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10
+				food_pos_x = randint(0, PLAYGROUND_WIDTH - 1)
+				food_pos_y = randint(0, PLAYGROUND_HEIGHT - 1)
 				
 				while (food_pos_x, food_pos_y) in snakes or (food_pos_x, food_pos_y) in bombs:  # 避免重叠刷新
-					food_pos_x = randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10
-					food_pos_y = randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10
+					food_pos_x = randint(0, PLAYGROUND_WIDTH - 1)
+					food_pos_y = randint(0, PLAYGROUND_HEIGHT - 1)
 				
 				isfood = True
 			
@@ -166,13 +166,13 @@ def main():
 			
 			s_screen.fill(THECOLORS["white"])  # 填充白屏
 			
-			s_screen.blit(si_food, (food_pos_x - 4, food_pos_y - 5))  # 填充食物图片
+			s_screen.blit(si_food, (food_pos_x * 10 - 4, food_pos_y * 10 - 5))  # 填充食物图片
 			
-			# for i in bombs:  # 填充炸弹图片
-			# 	s_screen.blit(si_bomb, ((i[0] - 2), (i[1] - 2)))
+			for i in bombs:  # 填充炸弹图片
+				s_screen.blit(si_bomb, [x * 10 - 2 for x in i])
 			
 			for i in snakes:  # 填充蛇图片
-				s_screen.blit(si_snake, i)
+				s_screen.blit(si_snake, [x * 10 for x in i])
 			
 			s_infoarea.fill(THECOLORS["gray"])  # 填充信息区域各种信息
 			pygame.draw.line(s_infoarea, THECOLORS["black"], (0, 0), (0, INFOAREA_HEIGHT), 3)  # 分隔线
@@ -192,7 +192,7 @@ def main():
 			f_show_number(s_infoarea, pos_y, (65, 50))
 			s_infoarea.blit(Lsf_small_arial_direction[direction], (65, 65))
 			
-			s_screen.blit(s_infoarea, (PLAYGROUND_WIDTH, 0))  # 信息Surface填充至屏幕Surface
+			s_screen.blit(s_infoarea, (PLAYGROUND_WIDTH * 10, 0))  # 信息Surface填充至屏幕Surface
 			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
 			
 			c_frame = 0  # 更新计数器
@@ -212,7 +212,7 @@ def main():
 		s_infoarea.blit(sf_small_arial_dot, (79, 95))
 		s_infoarea.blit(Lsf_small_arial_numbers_black[int((current_fps % 100) % 10)], (86, 95))
 		
-		s_screen.blit(s_infoarea, (PLAYGROUND_WIDTH, 0))  # 将实时填充后的信息Surface填充至屏幕Surface
+		s_screen.blit(s_infoarea, (PLAYGROUND_WIDTH * 10, 0))  # 将实时填充后的信息Surface填充至屏幕Surface
 		pygame.display.update(r_fast_update)  # 局部实时屏幕刷新
 		fps_clock.tick(fps)  # FPS等待时钟
 
@@ -324,4 +324,3 @@ def f_scoreboard(_s_screen, _fps_clock):  # 计分板画面
 if __name__ == "__main__":  # 程序入口
 	while True:
 		main()
-
