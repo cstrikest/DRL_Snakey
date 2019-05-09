@@ -24,7 +24,7 @@ class Snakey(object):
 		self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
 		                 randint(0, PLAYGROUND_HEIGHT - 1))  # 食物坐标
 		self.ate = 0  # 食物计数
-		self.deadflag = False  # 死亡判定
+		self.deathflag = False  # 死亡判定
 	
 	def reset(self):
 		"""
@@ -38,7 +38,7 @@ class Snakey(object):
 		self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
 		                 randint(0, PLAYGROUND_HEIGHT - 1))  # 食物坐标
 		self.ate = 0  # 食物计数
-		self.deadflag = False  # 死亡判定
+		self.deathflag = False  # 死亡判定
 	
 	def next(self, direction):
 		"""
@@ -77,7 +77,7 @@ class Snakey(object):
 		del (self.snakes[0])  # 删除蛇数组顶
 		
 		if (self.pos[0], self.pos[1]) in self.snakes:  # 自身碰撞检测
-			self.deadflag = True  # 触发死亡判定
+			self.deathflag = True  # 触发死亡判定
 		
 		self.snakes.append((self.pos[0], self.pos[1]))  # 推入蛇数组底
 		
@@ -96,7 +96,7 @@ class Snakey(object):
 			self.isfood = True
 		
 		if (self.pos[0], self.pos[1]) in self.bombs:  # 炸弹碰撞检测
-			self.deadflag = True
+			self.deathflag = True
 		
 		if (self.pos[0], self.pos[1]) == self.food_pos:  # 吃食物事件
 			self.snakes.append((self.pos[0], self.pos[1]))  # 将当前位置推入蛇数组

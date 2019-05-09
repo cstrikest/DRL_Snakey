@@ -9,8 +9,14 @@ from pygame.color import THECOLORS
 import pygame.font
 
 
-class Snacky_UI(object):
-	def __init__(self, full_screen, fps):
+class UI(object):
+	def __init__(self, full_screen = False, fps = 60):
+		"""
+		初始化游戏界面。
+		:param full_screen: 是否全屏
+		:param fps: 游戏帧率
+					根据计算性能，会有实际帧率低于设定帧率的情况。
+		"""
 		self.PLAYGROUND_WIDTH = 20
 		self.PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 		self.INFOAREA_WIDTH = 100
@@ -72,55 +78,41 @@ class Snacky_UI(object):
 	def show(self, game_core, agent):
 		"""
 		显示图形界面。
-		:param game_core: 游戏物理引擎
-		:param agent: 决策逻辑
+		:param game_core: 游戏物理引擎类
+		:param agent: 决策逻辑类
 		"""
-		diffculty_counter = 0  # 难度计数
-		level = 10  # 难度
-		c_frame = 0  # 空闲帧数计数器
-		diffculty = [14, 12, 10, 8, 6, 5, 4, 3, 2, 1, 0]  # 难度表 越难空闲帧越少
 		self.f_gamestart(self.s_screen, self.fps_clock)  # 开始游戏画面
 		while True:  # 屏幕循环
 			for event in pygame.event.get():  # 事件循环
 				if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
 					pygame.quit()
 					sys.exit()
-			if c_frame >= diffculty[level]:  # 根据难度判断空闲帧 最高难度无空闲帧
-				game_core.next(agent.get_next_direction(game_core.pos, game_core.food_pos, game_core.snakes))  # 获取下一步方向
-				if diffculty_counter > 4:  # 难度调整
-					if level < len(diffculty) - 1:
-						level += 1
-						diffculty_counter = 0
-				self.s_screen.fill(THECOLORS["white"])  # 填充白屏
-				self.s_screen.blit(self.si_food,
-				                   (game_core.food_pos[0] * 10 - 4, game_core.food_pos[1] * 10 - 5))  # 填充食物图片
-				for i in game_core.bombs:  # 填充炸弹图片
-					self.s_screen.blit(self.si_bomb, [x * 10 - 2 for x in i])
-				for i in game_core.snakes:  # 填充蛇图片
-					self.s_screen.blit(self.si_snake, [x * 10 for x in i])
-				self.s_infoarea.fill(THECOLORS["gray"])  # 填充信息区域各种信息
-				pygame.draw.line(self.s_infoarea, THECOLORS["black"], (0, 0), (0, self.INFOAREA_HEIGHT), 3)  # 分隔线
-				self.s_infoarea.blit(self.sf_small_arial_level, (10, 5))  # 难度信息提示
-				self.s_infoarea.blit(self.sf_small_arial_ate, (10, 20))  # 食物数量信息
-				self.s_infoarea.blit(self.sf_small_arial_position, (10, 35))  # 位置信息
-				self.s_infoarea.blit(self.sf_small_arial_direction, (10, 65))  # 方向信息
-				self.s_infoarea.blit(self.sf_small_arial_botton, (10, 80))  # 按键寄存信息 （实时刷新）
-				self.s_infoarea.blit(self.sf_small_arial_current_fps, (10, 95))  # FPS（实时刷新）
-				if level < 9:  # 刷新信息
-					self.s_infoarea.blit(self.Lsf_small_arial_numbers_black[level], (65, 5))
-				else:
-					self.s_infoarea.blit(self.sf_small_arial_dot, (65, 5))
-				self.f_show_number(self.s_infoarea, game_core.ate, (65, 20))
-				self.f_show_number(self.s_infoarea, game_core.pos[0], (65, 35))
-				self.f_show_number(self.s_infoarea, game_core.pos[1], (65, 50))
-				self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 65))
-				self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 信息Surface填充至屏幕Surface
-				pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
-				c_frame = 0  # 更新计数器
-				if game_core.deadflag:  # 死亡判定
-					self.f_gameover(self.s_screen, self.fps_clock, game_core.ate)  # 游戏结束画面
-					return
-			c_frame += 1  # 迭代计数器
+			game_core.next(agent.get_next_direction(game_core.pos, game_core.food_pos, game_core.snakes))  # 获取下一步方向
+			self.s_screen.fill(THECOLORS["white"])  # 填充白屏
+			self.s_screen.blit(self.si_food,
+			                   (game_core.food_pos[0] * 10 - 4, game_core.food_pos[1] * 10 - 5))  # 填充食物图片
+			for i in game_core.bombs:  # 填充炸弹图片
+				self.s_screen.blit(self.si_bomb, [x * 10 - 2 for x in i])
+			for i in game_core.snakes:  # 填充蛇图片
+				self.s_screen.blit(self.si_snake, [x * 10 for x in i])
+			self.s_infoarea.fill(THECOLORS["gray"])  # 填充信息区域各种信息
+			pygame.draw.line(self.s_infoarea, THECOLORS["black"], (0, 0), (0, self.INFOAREA_HEIGHT), 3)  # 分隔线
+			self.s_infoarea.blit(self.sf_small_arial_level, (10, 5))  # 难度信息提示
+			self.s_infoarea.blit(self.sf_small_arial_ate, (10, 20))  # 食物数量信息
+			self.s_infoarea.blit(self.sf_small_arial_position, (10, 35))  # 位置信息
+			self.s_infoarea.blit(self.sf_small_arial_direction, (10, 65))  # 方向信息
+			self.s_infoarea.blit(self.sf_small_arial_botton, (10, 80))  # 按键寄存信息 （实时刷新）
+			self.s_infoarea.blit(self.sf_small_arial_current_fps, (10, 95))  # FPS（实时刷新）
+			self.s_infoarea.blit(self.sf_small_arial_dot, (65, 5))
+			self.f_show_number(self.s_infoarea, game_core.ate, (65, 20))
+			self.f_show_number(self.s_infoarea, game_core.pos[0], (65, 35))
+			self.f_show_number(self.s_infoarea, game_core.pos[1], (65, 50))
+			self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 65))
+			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 信息Surface填充至屏幕Surface
+			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
+			if game_core.deathflag:  # 死亡判定
+				self.f_gameover(self.s_screen, self.fps_clock, game_core.ate)  # 游戏结束画面
+				return
 			self.s_infoarea.blit(self.s_gray, (65, 80))  # 填充实时刷新块（灰色背景）
 			self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 80))  # 填充按键寄存
 			current_fps = self.fps_clock.get_fps() * 10  # 获取实时FPS

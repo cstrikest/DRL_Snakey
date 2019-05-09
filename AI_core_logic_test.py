@@ -17,7 +17,7 @@ start = time.time()
 
 while True:
 	G.next(AI_core_logic.get_next_direction(G.pos, G.food_pos, G.snakes))  # 获取下一步方向
-	if G.deadflag:
+	if G.deathflag:
 		ate = G.ate
 		print(ate)
 		sum += ate

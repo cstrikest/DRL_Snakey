@@ -5,14 +5,11 @@ import random
 __author__ = "Yxzh"
 
 class Logic_AI(object):
-	def __init__(self):
-		self.PLAYGROUND_WIDTH = 20
-		self.PLAYGROUND_HEIGHT = 20  # 游戏区域大小
-	
 	def next(self, direction, pos):  # 预测下一步位置
 		x = pos[0]
 		y = pos[1]
-		
+		PLAYGROUND_WIDTH = 20
+		PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 		if direction == "W":
 			y -= 1
 		if direction == "S":
@@ -21,14 +18,13 @@ class Logic_AI(object):
 			x -= 1
 		if direction == "D":
 			x += 1
-		
 		if x < 0:
-			x = self.PLAYGROUND_WIDTH - 1
-		if x > self.PLAYGROUND_WIDTH - 1:
+			x = PLAYGROUND_WIDTH - 1
+		if x > PLAYGROUND_WIDTH - 1:
 			x = 0
 		if y < 0:
-			y = self.PLAYGROUND_HEIGHT - 1
-		if y > self.PLAYGROUND_HEIGHT - 1:
+			y = PLAYGROUND_HEIGHT - 1
+		if y > PLAYGROUND_HEIGHT - 1:
 			y = 0
 		
 		return (x, y)
@@ -47,7 +43,14 @@ class Logic_AI(object):
 			temp = l[random.randrange(0, 4)]
 		return temp
 	
-	def get_next_direction(self, pos, food_pos, snakes):  # 追寻食物
+	def get_next_direction(self, pos, food_pos, snakes):
+		"""
+		根据环境，通过决策算法返回前进的方向。这是决定策略类中必不可少的一个函数。
+		:param pos: 当前位置
+		:param food_pos: 食物位置
+		:param snakes: 蛇数组
+		:return: 决定的前进方向
+		"""
 		Hs = pos[0] - food_pos[0]  # 横向差值
 		Vs = pos[1] - food_pos[1]  # 纵向差值
 		
