@@ -1,44 +1,65 @@
 # 贪吃蛇游戏 机器学习AI
+
 使用神经网络训练一个可以玩贪吃蛇游戏的AI。
-
-Python版本 Python3.6
-
-依赖库
-
-- pygame 1.9.5
-- tensorflow / tensorflow-gpu
-
-## 游戏部分说明
-
-#### Snakey_UI.py
 
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
-提供了一个可以供人类游玩的贪吃蛇游戏UI。游戏素材图片比较简陋。游戏内容设有等级划分，随着获取食物的数量上升，蛇前进的速度会变快。
+## 游戏说明
+
+### 规则
+
+游戏素材图片比较简陋。人类玩家游玩时，游戏内容设有等级划分，随着获取食物的数量上升，蛇前进的速度会变快。
 
 同时每增加一个难度会多出现一个触碰到便会游戏结束的炸弹。
 
 游戏在一个200×200像素的平面中运行，每10×10个像素作为一个单元。 右侧有计分面板。
 
-游戏右侧是一个100×200像素的信息面板。主要用到的信息会在右侧给出
+游戏右侧是一个100×200像素的信息面板。主要用到的信息会在右侧给出。
 
 使用WSAD控制移动方向，任何时候都可以使用Q键退出。
 
 游戏结束画面按R重新开始，按S则会跳出计分板。
 
+### AI部分说明
+
+AI没有游戏的速度区别与等级区分，在有UI的模式下默认使用最快的刷新速度。
+
+除单独存在的演示脚本外，AI部分主要由**物理引擎**，**图形引擎**，**决策逻辑**三部分组成，运行时可以根据需要选择是否加载图形引擎显示游戏界面。
+
+本项目内拥有数个AI逻辑脚本，详细见下文的各脚本说明。
+
+## 环境
+
+Python版本 Python3.6
+
+###外部依赖
+
+* pygame
+* tensorflow / tensorflow-gpu
+* h5py
+* numpy
+
+## 各脚本说明
+
+#### Snakey_UI.py
+
+与其他脚本无关，作为示例的一个单独脚本，提供了供人类游玩的UI。
+
 ![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
+
+#### Game_demonstration.py
+
+演示用脚本，展示了各部分的使用方法。
+
+现阶段可直接运行此脚本观看基于AI_core_logic.py的AI游戏过程。
 
 #### Snakey_core.py
 
-为了给模型训练加快速度的游戏核心逻辑类。只保留游戏规则，舍弃所有UI相关，提升训练时的速度。
+游戏的物理引擎。简化了所有UI部分关联，整合为一个Snakey类。
 
-#### Snakey_UI_AI_interface.py
+#### Snakey_UI_core.py
 
-非人类玩家的游戏UI，目前是通过AI_core_logic.py中get_next_direction()来获取下一步的方向信息。
-
-之后还会使用通过神经网络训练出的模型进行游戏控制。
-
-现阶段可直接运行此脚本观看基于AI_core_logic.py的AI游戏过程。
+游戏的图形引擎，将游戏过程可视化。
 
 #### AI_core_logic.py AI_core_logic_test.py
 
