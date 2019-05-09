@@ -5,6 +5,7 @@ __author__ = "Yxzh"
 from random import randint
 import numpy as np
 
+
 PLAYGROUND_WIDTH = 20
 PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 
@@ -20,8 +21,8 @@ class Snakey(object):
 		self.snakes = [(0, 0)] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
-		self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1),
-		                 randint(0, PLAYGROUND_HEIGHT - 1)]  # 食物坐标
+		self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
+		                 randint(0, PLAYGROUND_HEIGHT - 1))  # 食物坐标
 		self.ate = 0  # 食物计数
 		self.deadflag = False  # 死亡判定
 	
@@ -34,9 +35,8 @@ class Snakey(object):
 		self.snakes = [(0, 0)] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
-		self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1),
-		                 randint(0, PLAYGROUND_HEIGHT - 1)]  # 食物坐标
-		self.diffculty_counter = 0  # 难度计数
+		self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
+		                 randint(0, PLAYGROUND_HEIGHT - 1))  # 食物坐标
 		self.ate = 0  # 食物计数
 		self.deadflag = False  # 死亡判定
 	
@@ -89,16 +89,16 @@ class Snakey(object):
 			self.bombs.append(bomb_pos)
 		
 		if not self.isfood:  # 根据食物判定刷新食物
-			self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1)]
+			self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			while self.food_pos in self.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
-				self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1),
-				                 randint(0, PLAYGROUND_HEIGHT - 1)]
+				self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
+				                 randint(0, PLAYGROUND_HEIGHT - 1))
 			self.isfood = True
 		
 		if (self.pos[0], self.pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deadflag = True
 		
-		if self.pos == self.food_pos:  # 吃食物事件
+		if (self.pos[0], self.pos[1]) == self.food_pos:  # 吃食物事件
 			self.snakes.append((self.pos[0], self.pos[1]))  # 将当前位置推入蛇数组
 			self.ate += 1
 			self.isfood = False
@@ -120,4 +120,4 @@ class Snakey(object):
 			map[self.food_pos[1]][self.food_pos[0]] = -1
 		else:
 			map[self.food_pos[1]][self.food_pos[0]] = 2
-		return map.reshape((400, ))
+		return map.reshape((400,))
