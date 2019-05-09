@@ -10,7 +10,7 @@ PLAYGROUND_WIDTH = 20
 PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 
 class Snakey(object):
-	def __init__(self, bomb = 1):
+	def __init__(self, bomb = 0):
 		"""
 		初始化游戏
 		:param bomb: 地图中炸弹数量
@@ -55,7 +55,6 @@ class Snakey(object):
 			self.direction = "A"
 		if direction == "D" and self.direction != "A":
 			self.direction = "D"
-		
 		if self.direction == "W":
 			self.pos[1] -= 1
 		if self.direction == "S":
@@ -64,7 +63,6 @@ class Snakey(object):
 			self.pos[0] -= 1
 		if self.direction == "D":
 			self.pos[0] += 1
-		
 		if self.pos[0] < 0:  # 碰到屏幕边缘循环
 			self.pos[0] = PLAYGROUND_WIDTH - 1
 		if self.pos[0] > PLAYGROUND_WIDTH - 1:
@@ -73,36 +71,28 @@ class Snakey(object):
 			self.pos[1] = PLAYGROUND_HEIGHT - 1
 		if self.pos[1] > PLAYGROUND_HEIGHT - 1:
 			self.pos[1] = 0
-		
 		del (self.snakes[0])  # 删除蛇数组顶
-		
 		if (self.pos[0], self.pos[1]) in self.snakes:  # 自身碰撞检测
 			self.deathflag = True  # 触发死亡判定
-		
 		self.snakes.append((self.pos[0], self.pos[1]))  # 推入蛇数组底
-		
 		while len(self.bombs) < self.bomb_number:  # 刷新炸弹
 			bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
-			while (bomb_pos in self.snakes) or (self.food_pos[0] == bomb_pos[0] or self.food_pos[1] == bomb_pos[1]) or (
+			while (bomb_pos in self.snakes) or (self.food_pos[0] == bomb_pos[0] and self.food_pos[1] == bomb_pos[1]) or (
 							  bomb_pos in self.bombs):  # 避免与蛇和食物和其他炸弹重叠刷新
 				bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			self.bombs.append(bomb_pos)
-		
 		if not self.isfood:  # 根据食物判定刷新食物
 			self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			while self.food_pos in self.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
 				self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
 				                 randint(0, PLAYGROUND_HEIGHT - 1))
 			self.isfood = True
-		
 		if (self.pos[0], self.pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deathflag = True
-		
 		if (self.pos[0], self.pos[1]) == self.food_pos:  # 吃食物事件
 			self.snakes.append((self.pos[0], self.pos[1]))  # 将当前位置推入蛇数组
 			self.ate += 1
 			self.isfood = False
-		
 		return self.snakes, self.pos, self.food_pos, self.bombs, self.ate
 	
 	def get_map(self):

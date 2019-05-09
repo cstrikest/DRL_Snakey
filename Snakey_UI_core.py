@@ -81,7 +81,7 @@ class UI(object):
 		:param game_core: 游戏物理引擎类
 		:param agent: 决策逻辑类
 		"""
-		self.f_gamestart(self.s_screen, self.fps_clock)  # 开始游戏画面
+		self.start()  # 开始游戏画面
 		while True:  # 屏幕循环
 			for event in pygame.event.get():  # 事件循环
 				if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
@@ -111,8 +111,8 @@ class UI(object):
 			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 信息Surface填充至屏幕Surface
 			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
 			if game_core.deathflag:  # 死亡判定
-				self.f_gameover(self.s_screen, self.fps_clock, game_core.ate)  # 游戏结束画面
-				return
+				self.f_gameover(game_core.ate)  # 游戏结束画面
+				game_core.reset()
 			self.s_infoarea.blit(self.s_gray, (65, 80))  # 填充实时刷新块（灰色背景）
 			self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 80))  # 填充按键寄存
 			current_fps = self.fps_clock.get_fps() * 10  # 获取实时FPS
@@ -137,11 +137,9 @@ class UI(object):
 		surface.blit(self.Lsf_small_arial_numbers_black[int((number % 100) % 10)], (position[0] + 14, position[1]))
 		return
 	
-	def f_gamestart(self, _s_screen, _fps_clock):
+	def start(self):
 		"""
 		游戏开始画面
-		:param _s_screen: 屏幕Surface
-		:param _fps_clock: FPS时钟对象
 		"""
 		
 		while True:
@@ -150,22 +148,20 @@ class UI(object):
 					pygame.quit()
 					sys.exit()
 				if event.type == pygame.KEYDOWN and event.key == K_s:  # 进入计分板画面
-					self.f_scoreboard(_s_screen, _fps_clock)
+					self.f_scoreboard()
 				if event.type == pygame.KEYDOWN and event.key == K_SPACE:  # 进入main()函数
 					return
-			_s_screen.fill(THECOLORS["white"])
-			_s_screen.blit(self.sf_optima_caption, (81, 3))
-			_s_screen.blit(self.si_gamestart, (93, 90))
-			_s_screen.blit(self.sf_small_arial_gamestart, (62, 52))
-			_s_screen.blit(self.sf_small_arial_scoreboard, (62, 70))
+			self.s_screen.fill(THECOLORS["white"])
+			self.s_screen.blit(self.sf_optima_caption, (81, 3))
+			self.s_screen.blit(self.si_gamestart, (93, 90))
+			self.s_screen.blit(self.sf_small_arial_gamestart, (62, 52))
+			self.s_screen.blit(self.sf_small_arial_scoreboard, (62, 70))
 			pygame.display.flip()
-			_fps_clock.tick(5)
+			self.fps_clock.tick(5)
 	
-	def f_gameover(self, _s_screen, _fps_clock, ate):
+	def f_gameover(self, ate):
 		"""
 		游戏结束画面
-		:param _s_screen: 屏幕Surface
-		:param _fps_clock: FPS时钟对象
 		:param ate: 食物计数
 		"""
 		
@@ -178,25 +174,22 @@ class UI(object):
 					pygame.quit()
 					sys.exit()
 				if event.type == pygame.KEYDOWN and event.key == K_s:  # 进入计分板画面
-					self.f_scoreboard(_s_screen, _fps_clock)
-					return
+					self.f_scoreboard()
 				if event.type == pygame.KEYDOWN and event.key == K_r:  # 重新开始
 					return
-			_s_screen.fill(THECOLORS["white"])
-			_s_screen.blit(self.sf_arial_gameover, (72, 4))
-			_s_screen.blit(self.sf_small_arial_score, (100, 35))
-			_s_screen.blit(self.sf_small_arial_restart, (92, 50))
-			_s_screen.blit(self.sf_small_arial_scoreboard, (62, 65))
-			_s_screen.blit(self.si_deadsnake, (80, 75))
-			self.f_show_number(_s_screen, ate, (150, 35))  # 填充该局得分
+			self.s_screen.fill(THECOLORS["white"])
+			self.s_screen.blit(self.sf_arial_gameover, (72, 4))
+			self.s_screen.blit(self.sf_small_arial_score, (100, 35))
+			self.s_screen.blit(self.sf_small_arial_restart, (92, 50))
+			self.s_screen.blit(self.sf_small_arial_scoreboard, (62, 65))
+			self.s_screen.blit(self.si_deadsnake, (80, 75))
+			self.f_show_number(self.s_screen, ate, (150, 35))  # 填充该局得分
 			pygame.display.flip()
-			_fps_clock.tick(5)
+			self.fps_clock.tick(5)
 	
-	def f_scoreboard(self, _s_screen, _fps_clock):  # 计分板画面
+	def f_scoreboard(self):  # 计分板画面
 		"""
 		计分板画面
-		:param _s_screen: 屏幕Surface
-		:param _fps_clock: FPS时钟对象
 		"""
 		
 		fi_score = open("score.s", "r")  # 读取分数文件
@@ -212,14 +205,14 @@ class UI(object):
 					sys.exit()
 				if event.type == pygame.KEYDOWN and event.key == K_r:  # 重新开始
 					return
-			_s_screen.fill(THECOLORS["white"])
-			_s_screen.blit(self.sf_arial_scoreboad, (65, 4))
-			_s_screen.blit(self.sf_small_arial_back, (100, 40))
+			self.s_screen.fill(THECOLORS["white"])
+			self.s_screen.blit(self.sf_arial_scoreboad, (65, 4))
+			self.s_screen.blit(self.sf_small_arial_back, (100, 40))
 			for i in range(0, len(scores)):  # 填充排行榜
-				_s_screen.blit(self.Lsf_small_arial_numbers_black[i + 1], (130, 60 + 15 * i))
-				_s_screen.blit(self.sf_small_arial_dot, (137, 60 + 15 * i))
-				self.f_show_number(_s_screen, scores[i], (150, 60 + 15 * i))
+				self.s_screen.blit(self.Lsf_small_arial_numbers_black[i + 1], (130, 60 + 15 * i))
+				self.s_screen.blit(self.sf_small_arial_dot, (137, 60 + 15 * i))
+				self.f_show_number(self.s_screen, scores[i], (150, 60 + 15 * i))
 				if i > 7:
 					break
 			pygame.display.flip()
-			_fps_clock.tick(5)
+			self.fps_clock.tick(5)
