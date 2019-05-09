@@ -4,6 +4,17 @@
 
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
+## 环境
+
+Python版本 Python3.6
+
+###外部依赖
+
+* pygame
+* tensorflow / tensorflow-gpu
+* h5py
+* numpy
+
 ## 游戏说明
 
 ### 规则
@@ -28,17 +39,32 @@ AI没有游戏的速度区别与等级区分，在有UI的模式下默认使用�
 
 本项目内拥有数个AI逻辑脚本，详细见下文的各脚本说明。
 
-## 环境
+### 使用方法
 
-Python版本 Python3.6
+不带界面的示例：
 
-###外部依赖
+    import Snakey_core
+    import Snakey_UI_core
+    import AI_core_logic
+    
+    Agent = AI_core_logic.Logic_AI()
+    Game = Snakey_core.Snakey(bomb = 0)
+    while not Game.deathflag:
+	    Game.next(Agent.get_next_direction(Game.pos, Game.food_pos, Game.snakes))
+    print(Game.ate)
 
-* pygame
-* tensorflow / tensorflow-gpu
-* h5py
-* numpy
 
+带界面的示例：
+
+    import Snakey_core
+    import Snakey_UI_core
+    import AI_core_logic
+    
+    Agent = AI_core_logic.Logic_AI()
+    Game = Snakey_core.Snakey(bomb = 0)
+    UI = Snakey_UI_core.UI(False, 60)
+    UI.show(Game, Agent)
+    
 ## 各脚本说明
 
 #### Snakey_UI.py
