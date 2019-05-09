@@ -3,39 +3,46 @@
 __author__ = "Yxzh"
 
 from random import randint
+import numpy as np
 
-
-PLAYGROUND_WIDTH = 200
-PLAYGROUND_HEIGHT = 200  # 游戏区域大小
+PLAYGROUND_WIDTH = 20
+PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 
 class Snakey(object):
-	
 	def __init__(self, bomb = 1):
+		"""
+		初始化游戏
+		:param bomb: 地图中炸弹数量
+		"""
 		self.bomb_number = bomb  # 炸弹个数
 		self.pos = [0, 0]  # 蛇头位置
 		self.direction = "S"  # 上一步蛇头方向
 		self.snakes = [(0, 0)] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
-		self.food_pos = [randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10, randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10]  # 食物坐标
+		self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1),
+		                 randint(0, PLAYGROUND_HEIGHT - 1)]  # 食物坐标
 		self.ate = 0  # 食物计数
 		self.deadflag = False  # 死亡判定
 	
 	def reset(self):
+		"""
+		重置游戏
+		"""
 		self.pos = [0, 0]  # 蛇头位置
 		self.direction = "S"  # 上一步蛇头方向
 		self.snakes = [(0, 0)] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
-		self.food_pos = [randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10,
-		                 randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10]  # 食物坐标
+		self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1),
+		                 randint(0, PLAYGROUND_HEIGHT - 1)]  # 食物坐标
 		self.diffculty_counter = 0  # 难度计数
 		self.ate = 0  # 食物计数
 		self.deadflag = False  # 死亡判定
-		
+	
 	def next(self, direction):
 		"""
-		蛇走一步
+		游戏进行一步
 		:param direction: 每一步的方向
 		:return: 返回详细信息
 		"""
@@ -50,21 +57,21 @@ class Snakey(object):
 			self.direction = "D"
 		
 		if self.direction == "W":
-			self.pos[1] -= 10
+			self.pos[1] -= 1
 		if self.direction == "S":
-			self.pos[1] += 10
+			self.pos[1] += 1
 		if self.direction == "A":
-			self.pos[0] -= 10
+			self.pos[0] -= 1
 		if self.direction == "D":
-			self.pos[0] += 10
+			self.pos[0] += 1
 		
 		if self.pos[0] < 0:  # 碰到屏幕边缘循环
-			self.pos[0] = PLAYGROUND_WIDTH - 10
-		if self.pos[0] > PLAYGROUND_WIDTH - 10:
+			self.pos[0] = PLAYGROUND_WIDTH - 1
+		if self.pos[0] > PLAYGROUND_WIDTH - 1:
 			self.pos[0] = 0
 		if self.pos[1] < 0:
-			self.pos[1] = PLAYGROUND_HEIGHT - 10
-		if self.pos[1] > PLAYGROUND_HEIGHT - 10:
+			self.pos[1] = PLAYGROUND_HEIGHT - 1
+		if self.pos[1] > PLAYGROUND_HEIGHT - 1:
 			self.pos[1] = 0
 		
 		del (self.snakes[0])  # 删除蛇数组顶
@@ -75,17 +82,17 @@ class Snakey(object):
 		self.snakes.append((self.pos[0], self.pos[1]))  # 推入蛇数组底
 		
 		while len(self.bombs) < self.bomb_number:  # 刷新炸弹
-			bomb_pos = (randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10, randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10)
+			bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			while (bomb_pos in self.snakes) or (self.food_pos[0] == bomb_pos[0] or self.food_pos[1] == bomb_pos[1]) or (
 							  bomb_pos in self.bombs):  # 避免与蛇和食物和其他炸弹重叠刷新
-				bomb_pos = (randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10, randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10)
+				bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			self.bombs.append(bomb_pos)
 		
 		if not self.isfood:  # 根据食物判定刷新食物
-			self.food_pos = [randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10, randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10]
+			self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1)]
 			while self.food_pos in self.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
-				self.food_pos = [randint(0, PLAYGROUND_WIDTH / 10 - 1) * 10,
-				                 randint(0, PLAYGROUND_HEIGHT / 10 - 1) * 10]
+				self.food_pos = [randint(0, PLAYGROUND_WIDTH - 1),
+				                 randint(0, PLAYGROUND_HEIGHT - 1)]
 			self.isfood = True
 		
 		if (self.pos[0], self.pos[1]) in self.bombs:  # 炸弹碰撞检测
@@ -97,3 +104,20 @@ class Snakey(object):
 			self.isfood = False
 		
 		return self.snakes, self.pos, self.food_pos, self.bombs, self.ate
+	
+	def get_map(self):
+		"""
+		获得游戏地图信息
+		:return: 游戏地图信息，从左上到右下按行排列，将20×20的地图扁平化为400个地图数据。
+				地图块上是蛇则标志位1，食物为2，炸弹为3，空为0，蛇与食物重叠则为-1。
+		"""
+		map = np.full((20, 20), 0)
+		for S in self.snakes:
+			map[S[1]][S[0]] = 1
+		for B in self.bombs:
+			map[B[1]][B[0]] = 3
+		if self.pos == self.food_pos:
+			map[self.food_pos[1]][self.food_pos[0]] = -1
+		else:
+			map[self.food_pos[1]][self.food_pos[0]] = 2
+		return map.reshape((400, ))

@@ -4,8 +4,8 @@ import random
 
 __author__ = "Yxzh"
 
-PLAYGROUND_WIDTH = 200
-PLAYGROUND_HEIGHT = 200  # 游戏区域大小
+PLAYGROUND_WIDTH = 20
+PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 l = ["W", "S", "A", "D"]
 
 def next(direction, pos):  # 预测下一步位置
@@ -13,21 +13,21 @@ def next(direction, pos):  # 预测下一步位置
 	y = pos[1]
 	
 	if direction == "W":
-		y -= 10
+		y -= 1
 	if direction == "S":
-		y += 10
+		y += 1
 	if direction == "A":
-		x -= 10
+		x -= 1
 	if direction == "D":
-		x += 10
+		x += 1
 	
 	if x < 0:
-		x = PLAYGROUND_WIDTH - 10
-	if x > PLAYGROUND_WIDTH - 10:
+		x = PLAYGROUND_WIDTH - 1
+	if x > PLAYGROUND_WIDTH - 1:
 		x = 0
 	if y < 0:
-		y = PLAYGROUND_HEIGHT - 10
-	if y > PLAYGROUND_HEIGHT - 10:
+		y = PLAYGROUND_HEIGHT - 1
+	if y > PLAYGROUND_HEIGHT - 1:
 		y = 0
 	
 	return (x, y)
