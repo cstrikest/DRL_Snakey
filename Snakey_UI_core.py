@@ -95,6 +95,9 @@ class UI(object):
 				self.s_screen.blit(self.si_bomb, [x * 10 - 2 for x in i])
 			for i in game_core.snakes:  # 填充蛇图片
 				self.s_screen.blit(self.si_snake, [x * 10 for x in i])
+			if game_core.deathflag:  # 死亡判定
+				self.f_gameover(game_core.ate)  # 游戏结束画面
+				game_core.reset()
 			self.s_infoarea.fill(THECOLORS["gray"])  # 填充信息区域各种信息
 			pygame.draw.line(self.s_infoarea, THECOLORS["black"], (0, 0), (0, self.INFOAREA_HEIGHT), 3)  # 分隔线
 			self.s_infoarea.blit(self.sf_small_arial_level, (10, 5))  # 难度信息提示
@@ -107,23 +110,14 @@ class UI(object):
 			self.f_show_number(self.s_infoarea, game_core.ate, (65, 20))
 			self.f_show_number(self.s_infoarea, game_core.pos[0], (65, 35))
 			self.f_show_number(self.s_infoarea, game_core.pos[1], (65, 50))
+			current_fps = self.fps_clock.get_fps()  # 获取实时FPS
+			self.f_show_number(self.s_infoarea, current_fps, (65, 95))  # 填充FPS
 			self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 65))
-			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 信息Surface填充至屏幕Surface
-			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
-			if game_core.deathflag:  # 死亡判定
-				self.f_gameover(game_core.ate)  # 游戏结束画面
-				game_core.reset()
-			self.s_infoarea.blit(self.s_gray, (65, 80))  # 填充实时刷新块（灰色背景）
 			self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 80))  # 填充按键寄存
-			current_fps = self.fps_clock.get_fps() * 10  # 获取实时FPS
-			self.s_infoarea.blit(self.Lsf_small_arial_numbers_black[int(current_fps / 100)], (65, 95))  # 填充FPS
-			self.s_infoarea.blit(self.Lsf_small_arial_numbers_black[int((current_fps % 100) / 10)], (72, 95))
-			self.s_infoarea.blit(self.sf_small_arial_dot, (79, 95))
-			self.s_infoarea.blit(self.Lsf_small_arial_numbers_black[int((current_fps % 100) % 10)], (86, 95))
 			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 将实时填充后的信息Surface填充至屏幕Surface
-			pygame.display.update(self.r_fast_update)  # 局部实时屏幕刷新
+			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
 			self.fps_clock.tick(self.fps)  # FPS等待时钟
-	
+			
 	def f_show_number(self, surface, number, position):
 		"""
 		在目标Surface上填充数字
