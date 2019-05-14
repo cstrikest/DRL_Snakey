@@ -9,14 +9,14 @@ import numpy as np
 PLAYGROUND_WIDTH = 20
 PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 
-class Snakey(object):
+class Game(object):
 	def __init__(self, bomb = 0):
 		"""
 		初始化游戏
 		:param bomb: 地图中炸弹数量
 		"""
 		self.bomb_number = bomb  # 炸弹个数
-		self.pos = [0, 0]  # 蛇头位置
+		self.head_pos = [0, 0]  # 蛇头位置
 		self.direction = "S"  # 上一步蛇头方向
 		self.snakes = [(0, 0)] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
@@ -30,7 +30,7 @@ class Snakey(object):
 		"""
 		重置游戏
 		"""
-		self.pos = [0, 0]  # 蛇头位置
+		self.head_pos = [0, 0]  # 蛇头位置
 		self.direction = "S"  # 上一步蛇头方向
 		self.snakes = [(0, 0)] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
@@ -56,25 +56,25 @@ class Snakey(object):
 		if direction == "D" and self.direction != "A":
 			self.direction = "D"
 		if self.direction == "W":
-			self.pos[1] -= 1
+			self.head_pos[1] -= 1
 		if self.direction == "S":
-			self.pos[1] += 1
+			self.head_pos[1] += 1
 		if self.direction == "A":
-			self.pos[0] -= 1
+			self.head_pos[0] -= 1
 		if self.direction == "D":
-			self.pos[0] += 1
-		if self.pos[0] < 0:  # 碰到屏幕边缘循环
-			self.pos[0] = PLAYGROUND_WIDTH - 1
-		if self.pos[0] > PLAYGROUND_WIDTH - 1:
-			self.pos[0] = 0
-		if self.pos[1] < 0:
-			self.pos[1] = PLAYGROUND_HEIGHT - 1
-		if self.pos[1] > PLAYGROUND_HEIGHT - 1:
-			self.pos[1] = 0
+			self.head_pos[0] += 1
+		if self.head_pos[0] < 0:  # 碰到屏幕边缘循环
+			self.head_pos[0] = PLAYGROUND_WIDTH - 1
+		if self.head_pos[0] > PLAYGROUND_WIDTH - 1:
+			self.head_pos[0] = 0
+		if self.head_pos[1] < 0:
+			self.head_pos[1] = PLAYGROUND_HEIGHT - 1
+		if self.head_pos[1] > PLAYGROUND_HEIGHT - 1:
+			self.head_pos[1] = 0
 		del (self.snakes[0])  # 删除蛇数组顶
-		if (self.pos[0], self.pos[1]) in self.snakes:  # 自身碰撞检测
+		if (self.head_pos[0], self.head_pos[1]) in self.snakes:  # 自身碰撞检测
 			self.deathflag = True  # 触发死亡判定
-		self.snakes.append((self.pos[0], self.pos[1]))  # 推入蛇数组底
+		self.snakes.append((self.head_pos[0], self.head_pos[1]))  # 推入蛇数组底
 		while len(self.bombs) < self.bomb_number:  # 刷新炸弹
 			bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			while (bomb_pos in self.snakes) or (self.food_pos[0] == bomb_pos[0] and self.food_pos[1] == bomb_pos[1]) or (
@@ -87,13 +87,13 @@ class Snakey(object):
 				self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
 				                 randint(0, PLAYGROUND_HEIGHT - 1))
 			self.isfood = True
-		if (self.pos[0], self.pos[1]) in self.bombs:  # 炸弹碰撞检测
+		if (self.head_pos[0], self.head_pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deathflag = True
-		if (self.pos[0], self.pos[1]) == self.food_pos:  # 吃食物事件
-			self.snakes.append((self.pos[0], self.pos[1]))  # 将当前位置推入蛇数组
+		if (self.head_pos[0], self.head_pos[1]) == self.food_pos:  # 吃食物事件
+			self.snakes.append((self.head_pos[0], self.head_pos[1]))  # 将当前位置推入蛇数组
 			self.ate += 1
 			self.isfood = False
-		return self.snakes, self.pos, self.food_pos, self.bombs, self.ate
+		return self.snakes, self.head_pos, self.food_pos, self.bombs, self.ate
 	
 	def get_map(self):
 		"""
@@ -106,7 +106,7 @@ class Snakey(object):
 			map[S[1]][S[0]] = 1
 		for B in self.bombs:
 			map[B[1]][B[0]] = 3
-		if self.pos == self.food_pos:
+		if self.head_pos == self.food_pos:
 			map[self.food_pos[1]][self.food_pos[0]] = -1
 		else:
 			map[self.food_pos[1]][self.food_pos[0]] = 2

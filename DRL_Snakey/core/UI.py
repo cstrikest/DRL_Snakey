@@ -75,10 +75,10 @@ class UI(object):
 			self.Lsf_small_arial_numbers_black.append(f_small_arial.render(str(i), 1, THECOLORS["black"]))
 		self.fps = fps  # 帧率
 	
-	def show(self, game_core, agent):
+	def show(self, game, agent):
 		"""
 		显示图形界面。
-		:param game_core: 游戏物理引擎类
+		:param game: 游戏物理引擎类
 		:param agent: 决策逻辑类
 		"""
 		self.start()  # 开始游戏画面
@@ -87,17 +87,17 @@ class UI(object):
 				if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
 					pygame.quit()
 					sys.exit()
-			game_core.next(agent.get_next_direction(game_core.pos, game_core.food_pos, game_core.snakes))  # 获取下一步方向
+			game.next(agent.get_next_direction(game.head_pos, game.food_pos, game.snakes))  # 获取下一步方向
 			self.s_screen.fill(THECOLORS["white"])  # 填充白屏
 			self.s_screen.blit(self.si_food,
-			                   (game_core.food_pos[0] * 10 - 4, game_core.food_pos[1] * 10 - 5))  # 填充食物图片
-			for i in game_core.bombs:  # 填充炸弹图片
+			                   (game.food_pos[0] * 10 - 4, game.food_pos[1] * 10 - 5))  # 填充食物图片
+			for i in game.bombs:  # 填充炸弹图片
 				self.s_screen.blit(self.si_bomb, [x * 10 - 2 for x in i])
-			for i in game_core.snakes:  # 填充蛇图片
+			for i in game.snakes:  # 填充蛇图片
 				self.s_screen.blit(self.si_snake, [x * 10 for x in i])
-			if game_core.deathflag:  # 死亡判定
-				self.f_gameover(game_core.ate)  # 游戏结束画面
-				game_core.reset()
+			if game.deathflag:  # 死亡判定
+				self.f_gameover(game.ate)  # 游戏结束画面
+				game.reset()
 			self.s_infoarea.fill(THECOLORS["gray"])  # 填充信息区域各种信息
 			pygame.draw.line(self.s_infoarea, THECOLORS["black"], (0, 0), (0, self.INFOAREA_HEIGHT), 3)  # 分隔线
 			self.s_infoarea.blit(self.sf_small_arial_level, (10, 5))  # 难度信息提示
@@ -107,13 +107,13 @@ class UI(object):
 			self.s_infoarea.blit(self.sf_small_arial_botton, (10, 80))  # 按键寄存信息 （实时刷新）
 			self.s_infoarea.blit(self.sf_small_arial_current_fps, (10, 95))  # FPS（实时刷新）
 			self.s_infoarea.blit(self.sf_small_arial_dot, (65, 5))
-			self.f_show_number(self.s_infoarea, game_core.ate, (65, 20))
-			self.f_show_number(self.s_infoarea, game_core.pos[0], (65, 35))
-			self.f_show_number(self.s_infoarea, game_core.pos[1], (65, 50))
+			self.f_show_number(self.s_infoarea, game.ate, (65, 20))
+			self.f_show_number(self.s_infoarea, game.head_pos[0], (65, 35))
+			self.f_show_number(self.s_infoarea, game.head_pos[1], (65, 50))
 			current_fps = self.fps_clock.get_fps()  # 获取实时FPS
 			self.f_show_number(self.s_infoarea, current_fps, (65, 95))  # 填充FPS
-			self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 65))
-			self.s_infoarea.blit(self.Lsf_small_arial_direction[game_core.direction], (65, 80))  # 填充按键寄存
+			self.s_infoarea.blit(self.Lsf_small_arial_direction[game.direction], (65, 65))
+			self.s_infoarea.blit(self.Lsf_small_arial_direction[game.direction], (65, 80))  # 填充按键寄存
 			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 将实时填充后的信息Surface填充至屏幕Surface
 			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
 			self.fps_clock.tick(self.fps)  # FPS等待时钟

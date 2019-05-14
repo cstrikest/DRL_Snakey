@@ -1,12 +1,12 @@
-# 贪吃蛇游戏 机器学习AI
+# Deep Reinforcement Learning 深度强化学习贪吃蛇游戏 DRL_Snakey
 
-使用神经网络训练一个可以玩贪吃蛇游戏的AI。
+深度强化学习贪吃蛇AI与游戏环境。
 
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
 ## 环境
 
-Python版本 Python3.6
+Python版本: Python3.6或以上
 
 ###外部依赖
 
@@ -41,69 +41,65 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
 
 ### 使用方法
 
-不带界面的示例：
+**演示文件: Snakey_play.py**
 
-    import Snakey_core
-    import Snakey_UI_core
-    import AI_core_logic
-    
-    Agent = AI_core_logic.Logic_AI()
-    Game = Snakey_core.Snakey(bomb = 0)
-    while not Game.deathflag:
-	    Game.next(Agent.get_next_direction(Game.pos, Game.food_pos, Game.snakes))
-    print(Game.ate)
-
-
-带界面的示例：
-
-    import Snakey_core
-    import Snakey_UI_core
-    import AI_core_logic
-    
-    Agent = AI_core_logic.Logic_AI()
-    Game = Snakey_core.Snakey(bomb = 0)
-    UI = Snakey_UI_core.UI(False, 60)
-    UI.show(Game, Agent)
-    
-## 各脚本说明
-
-#### Snakey_UI.py
-
-与其他脚本无关，作为示例的一个单独脚本，提供了供人类游玩的UI。
+此文件与DRL_Snakey包无关联，不含有任何AI部分，作为一个人类可以游玩的游戏进行演示。
+在使用包之前可以先运行该脚本查看游戏效果。
 
 ![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
 
-#### Game_demonstration.py
+首先import
 
-使用方法中的代码，演示用脚本，展示了各部分的使用方法。
+    import DRL_Snakey as Snakey
+    
+创建游戏对象，此游戏类仅包含游戏规则(DRL_Snakey.Game)。
 
-现阶段可直接运行此脚本查看基于AI_core_logic.py的AI游戏过程。
+    game = Snakey.Game(bomb = 0)
+    
+游戏控制agent对象。这里以简单逻辑算法AI举例。
 
-#### Snakey_core.py
+    agent = Snakey.agent.Logic()
+    
+游戏界面对象，通过pygame模块创建可视的游戏界面。
+    
+    ui = Snakey.UI(full_screen = False, fps = 60)
+    
+通过UI类的show(game, agent)函数创建游戏窗口。
 
-游戏的物理引擎。简化了所有UI部分关联，整合为一个Snakey类。
+    ui.show(game, agent)
 
-#### Snakey_UI_core.py
+需要训练agent模型或其他等不需要游戏UI界面时，使用以下脚本控制游戏流程。
 
-游戏的图形引擎，将游戏过程可视化。Snakey_UI类
+    import DRL_Snakey as Snakey
+    
+    game = Snakey.Game(bomb = 0)
+    agent = Snakey.agent.Logic()
+    
+    while True:
+        game.next(agent.get_next_direction(game.head_pos, game.food_pos, game.snakes))
+        if game.deathflag:
+            print("Gameover. score:", game.ate)
+            game.reset()
+            
+## DRL_Snakey说明
 
-#### AI_core_logic.py AI_core_logic_test.py
+DRL_Snakey分为游戏环境DRL_Snakey.core，智能体DRL_Snakey.agent与DRL_Snakey.utlis组件两部分组成。
 
-一个简单的演示用AI决策逻辑，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。
+其中DRL_Snakey.core.Game为贪吃蛇游戏的基本行动规则，死亡判定以及地图查看等功能。可以视为游戏的本体。
+DRL_Snakey.core.UI为游戏界面显示相关。通过pygame包来创建可视化的游戏界面。
 
-经过测试(AI_core_logic_test.py)，此AI在10000次尝试中最好成绩为101，
-平均值为47.8496。平均每局游戏耗时0.00888秒。
+DRL_Snakey.agent为智能体部分。智能体会读取游戏中每步的状态，应用相对的决策方法（普通算法或神经网络等等）
+进行决策，并给出反应。
+
+#### DRL_Snakey.agent.Logic
+
+一个简单的演示用逻辑AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。
+
+通过计算蛇头位置与食物的水平竖直差，以之字形接近食物。并且在决策方向前，会通过Logic.next()预测
+下一步的位置，并调用Logic.elude()依次尝试各个方向来避免与自己相撞。但是因为只能预测下一步的危险情况，
+所以此AI并不具有很高智能，只是作为演示使用。
+
+经过测试，此AI在10000次尝试中最好成绩为101，平均值为47.8496。
 
 ![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/2.gif?raw=true)
 
-#### AI_core_ML.py AI_core_ML_test.py
-
-基于tensorflow.keras的强化深度学习AI。目前尚未完成，详细内容将在以后说明。
-
-#### training.py
-
-目前尚未完成，将会用于AI模型训练。
-
-## ML部分
-
-......

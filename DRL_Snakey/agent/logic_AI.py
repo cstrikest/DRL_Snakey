@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-import random
-
 __author__ = "Yxzh"
 
-class Logic_AI(object):
+
+import random
+from DRL_Snakey.agent import Agent
+
+class Logic(Agent):
 	def next(self, direction, pos):  # 预测下一步位置
 		x = pos[0]
 		y = pos[1]
