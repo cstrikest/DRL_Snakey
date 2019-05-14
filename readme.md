@@ -8,7 +8,7 @@
 
 Python版本: Python3.6或以上
 
-###外部依赖
+### 外部依赖
 
 * pygame
 * tensorflow / tensorflow-gpu
@@ -16,6 +16,13 @@ Python版本: Python3.6或以上
 * numpy
 
 ## 游戏说明
+
+**演示文件: Snakey_play.py**
+
+此文件与DRL_Snakey包无关联，不含有任何AI部分，作为一个人类可以游玩的游戏进行演示。
+在使用包之前可以先运行该脚本查看游戏效果。
+
+![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
 
 ### 规则
 
@@ -40,13 +47,6 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
 本项目内拥有数个AI逻辑脚本，详细见下文的各脚本说明。
 
 ### 使用方法
-
-**演示文件: Snakey_play.py**
-
-此文件与DRL_Snakey包无关联，不含有任何AI部分，作为一个人类可以游玩的游戏进行演示。
-在使用包之前可以先运行该脚本查看游戏效果。
-
-![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
 
 首先import
 
