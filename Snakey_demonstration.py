@@ -88,13 +88,13 @@ def main():
 			if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
 				pygame.quit()
 				sys.exit()
-			if event.type == KEYDOWN and event.key == K_s:  # 按键事件 调整按键寄存
+			if event.type == KEYDOWN and event.key == K_DOWN:  # 按键事件 调整按键寄存
 				button = "S"
-			if event.type == KEYDOWN and event.key == K_d:
+			if event.type == KEYDOWN and event.key == K_RIGHT:
 				button = "D"
-			if event.type == KEYDOWN and event.key == K_w:
+			if event.type == KEYDOWN and event.key == K_UP:
 				button = "W"
-			if event.type == KEYDOWN and event.key == K_a:
+			if event.type == KEYDOWN and event.key == K_LEFT:
 				button = "A"
 		
 		if c_frame >= diffculty[level]:  # 根据难度判断空闲帧 最高难度无空闲帧
