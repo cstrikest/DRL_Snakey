@@ -20,8 +20,8 @@ pygame.init()  # 初始化pygame
 pygame.display.set_caption(WINDOW_TITLE)  # 窗口标题
 fps_clock = pygame.time.Clock()  # 创建FPS时钟对象
 pygame.event.set_allowed(allowed_event)  # 设置事件过滤
-# s_screen = pygame.display.set_mode((PLAYGROUND_WIDTH + INFOAREA_WIDTH, PLAYGROUND_HEIGHT), 0, 32)  # 屏幕Surface
-s_screen = pygame.display.set_mode((PLAYGROUND_WIDTH + INFOAREA_WIDTH, PLAYGROUND_HEIGHT),pygame.FULLSCREEN , 0, 32)  # 全屏屏幕Surface
+s_screen = pygame.display.set_mode((PLAYGROUND_WIDTH + INFOAREA_WIDTH, PLAYGROUND_HEIGHT), 0, 32)  # 屏幕Surface
+# s_screen = pygame.display.set_mode((PLAYGROUND_WIDTH + INFOAREA_WIDTH, PLAYGROUND_HEIGHT),pygame.FULLSCREEN , 0, 32)  # 全屏屏幕Surface
 
 s_infoarea = pygame.Surface((PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT), 0, 32)  # 信息区域Surface
 s_gray = pygame.Surface((35, 37), 0, 32)  # 信息区域灰色实时刷新块
