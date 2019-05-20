@@ -2,7 +2,7 @@
 
 __author__ = "Yxzh"
 
-from DRL_Snakey.agent import Agent
+from DRL_Snakey.Agent import Agent
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -12,16 +12,22 @@ class DP(Agent):
 	Dynamic Programming 动态规划-马尔科夫决策法
 	通过迭代贝尔曼方程，每一步刷新地图各个点的价值，并且朝着价值最高的点前进。
 	"""
-	def __init__(self, discount, iteration):
+	def __init__(self, discount, iteration, walk_reward, eat_self_reward, food_reward):
 		"""
 		构造DP智能体类。
 		:param discount: 衰减率，贝尔曼方程中对于非即时回报的衰减率。
 		:param iteration: 推算价值矩阵的迭代次数。
+		:param walk_reward: 每走一步的回报
+		:param eat_self_reward: 吃到自己的回报
+		:param food_reward: 吃到食物的回报
 		"""
 		self.discount = discount
 		self.strategy = np.zeros((20, 20))
 		self.range = (20, 20)
 		self.iteration = iteration
+		self.walk_reward = walk_reward
+		self.eat_self_reward = eat_self_reward
+		self.food_reward = food_reward
 	
 	def frash_state_value(self, food_pos, snakes, now_direction, head_pos):
 		"""
@@ -39,11 +45,11 @@ class DP(Agent):
 			for j in range(0, self.range[1]):
 				temp = 0
 				for a in temp_action:
-					reward = -1  # 每走一步默认回报
+					reward = self.walk_reward  # 每走一步默认回报
 					if self.next(a, (i, j)) in snakes[: -1]:
-						reward = -3  # 下一步吃到自己的回报
+						reward = self.eat_self_reward  # 下一步吃到自己的回报
 					if self.next(a, (i, j)) == food_pos:
-						reward = 1  # 下一步吃到食物的回报
+						reward = self.food_reward  # 下一步吃到食物的回报
 					temp += 1 / len(temp_action) * (reward + self.discount * self.get_strategy(self.strategy, a, [i, j]))
 				temp_strategy[i][j] = temp
 		temp_strategy[food_pos[0]][food_pos[1]] = 0  # 食物点价值最高
