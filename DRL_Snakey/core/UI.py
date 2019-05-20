@@ -87,7 +87,9 @@ class UI(object):
 				if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:  # 退出事件
 					pygame.quit()
 					sys.exit()
-			game.next(agent.get_next_direction(game.head_pos, game.food_pos, game.snakes))  # 获取下一步方向
+				if event.type == KEYDOWN and event.key == K_e:
+					agent.custom_function(game.head_pos, game.food_pos, game.snakes, game.direction)
+			game.next(agent.get_next_direction(game.head_pos, game.food_pos, game.snakes, game.direction))  # 获取下一步方向
 			self.s_screen.fill(THECOLORS["white"])  # 填充白屏
 			self.s_screen.blit(self.si_food,
 			                   (game.food_pos[0] * 10 - 4, game.food_pos[1] * 10 - 5))  # 填充食物图片

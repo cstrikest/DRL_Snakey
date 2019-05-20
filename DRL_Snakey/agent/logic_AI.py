@@ -45,7 +45,7 @@ class Logic(Agent):
 			temp = l[random.randrange(0, 4)]
 		return temp
 	
-	def get_next_direction(self, pos, food_pos, snakes):
+	def get_next_direction(self, pos, food_pos, snakes, now_direction):
 		"""
 		根据环境，通过决策算法返回前进的方向。这是决定策略类中必不可少的一个函数。
 		:param pos: 当前位置
