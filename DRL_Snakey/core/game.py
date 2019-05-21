@@ -81,6 +81,10 @@ class Game(object):
 							  bomb_pos in self.bombs):  # 避免与蛇和食物和其他炸弹重叠刷新
 				bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			self.bombs.append(bomb_pos)
+		if (self.head_pos[0], self.head_pos[1]) == self.food_pos:  # 吃食物事件
+			self.snakes.append((self.head_pos[0], self.head_pos[1]))  # 将当前位置推入蛇数组
+			self.ate += 1
+			self.isfood = False
 		if not self.isfood:  # 根据食物判定刷新食物
 			self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			while self.food_pos in self.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
@@ -89,10 +93,6 @@ class Game(object):
 			self.isfood = True
 		if (self.head_pos[0], self.head_pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deathflag = True
-		if (self.head_pos[0], self.head_pos[1]) == self.food_pos:  # 吃食物事件
-			self.snakes.append((self.head_pos[0], self.head_pos[1]))  # 将当前位置推入蛇数组
-			self.ate += 1
-			self.isfood = False
 		return self.snakes, self.head_pos, self.food_pos, self.bombs, self.ate
 	
 	def get_map(self):

@@ -4,21 +4,23 @@ __author__ = "Yxzh"
 
 
 class Agent(object):
-	def get_next_direction(self, head_pos, food_pos, snakes, now_direction):
+	def get_next_direction(self, Game):
 		"""
 		根据智能体对当前环境的判断选择下一步前进的方向。
 		:return: 方向["W", "S", "A", "D"]
 		"""
 		pass
 	
-	def custom_function(self, head_pos, food_pos, snakes, now_direction):
+	def custom_function(self, Game):
 		"""
 		给不同的agnet预留的自定义函数，用来调试或数据可视化。
 		"""
 		pass
 	
+	# def visual_mode(self):
 	def __str__(self):
-		return "Agent."
+		return "agent."
 	
 from .logic_AI import Logic
 from .DP_AI import DP
+from .MC_AI import MC

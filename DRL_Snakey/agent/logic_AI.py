@@ -4,7 +4,7 @@ __author__ = "Yxzh"
 
 
 import random
-from DRL_Snakey.Agent import Agent
+from DRL_Snakey.agent import Agent
 
 class Logic(Agent):
 	def next(self, direction, pos):  # 预测下一步位置

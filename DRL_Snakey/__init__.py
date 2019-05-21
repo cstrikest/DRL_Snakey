@@ -3,8 +3,8 @@
 __author__ = "Yxzh"
 
 
-from DRL_Snakey import Agent
-from DRL_Snakey import Utils
-from DRL_Snakey.Core import *
+from DRL_Snakey import agent
+from DRL_Snakey import utils
+from DRL_Snakey.core import *
 
 name = "DRL_Snakey"

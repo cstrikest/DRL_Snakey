@@ -10,10 +10,10 @@ import pygame.font
 
 
 class UI(object):
-	def __init__(self, full_screen = False, fps = 60):
+	def __init__(self, visual_mode = True, fps = 60):
 		"""
 		初始化游戏界面。
-		:param full_screen: 是否全屏
+		:param visual_mode: 可视化模式
 		:param fps: 游戏帧率
 					根据计算性能，会有实际帧率低于设定帧率的情况。
 		"""
@@ -21,25 +21,24 @@ class UI(object):
 		self.PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 		self.INFOAREA_WIDTH = 100
 		self.INFOAREA_HEIGHT = 200  # 信息区域大小
+		self.visual_mode = visual_mode  # 显示模式 0为默认 1为图像模式
 		WINDOW_TITLE = "Snacky"  # 屏幕标题
 		allowed_event = [pygame.KEYDOWN, pygame.QUIT]  # 事件列表
 		pygame.init()  # 初始化pygame
 		pygame.display.set_caption(WINDOW_TITLE)  # 窗口标题
 		self.fps_clock = pygame.time.Clock()  # 创建FPS时钟对象
 		pygame.event.set_allowed(allowed_event)  # 设置事件过滤
-		if full_screen:  # 根据是否全屏创建屏幕Surface
+		self.is_pause = False
+		if self.visual_mode:
 			self.s_screen = pygame.display.set_mode(
-				(self.PLAYGROUND_WIDTH * 10 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), pygame.FULLSCREEN, 0,
+				(self.PLAYGROUND_WIDTH * 20 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
 				32)
 		else:
 			self.s_screen = pygame.display.set_mode(
 				(self.PLAYGROUND_WIDTH * 10 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
 				32)
-		self.s_infoarea = pygame.Surface((self.PLAYGROUND_WIDTH * 10, self.PLAYGROUND_HEIGHT * 10), 0,
-		                                 32)  # 信息区域Surface
-		self.s_gray = pygame.Surface((35, 37), 0, 32)  # 信息区域灰色实时刷新块
-		self.s_gray.fill(THECOLORS["gray"])
-		self.r_fast_update = pygame.Rect((65, 80), (100, 117))  # 信息区域实时刷新范围
+		self.s_infoarea = pygame.Surface((self.PLAYGROUND_WIDTH * 5, self.PLAYGROUND_HEIGHT * 10), 0, 32)  # 信息区域Surface
+		self.s_pltarea = pygame.Surface((self.PLAYGROUND_WIDTH * 10, self.PLAYGROUND_HEIGHT * 10), 0, 32)  # 图表区域Surface
 		self.si_snake = pygame.image.load("images/snake.png").convert_alpha()  # 加载图片
 		self.si_food = pygame.image.load("images/Pineapple.png").convert_alpha()
 		self.si_deadsnake = pygame.image.load("images/dead_snake.png").convert_alpha()
@@ -88,11 +87,33 @@ class UI(object):
 					pygame.quit()
 					sys.exit()
 				if event.type == KEYDOWN and event.key == K_e:
-					agent.custom_function(game.head_pos, game.food_pos, game.snakes, game.direction)
-			game.next(agent.get_next_direction(game.head_pos, game.food_pos, game.snakes, game.direction))  # 获取下一步方向
+					agent.custom_function(game)
+				if event.type == KEYDOWN and event.key == K_f:
+					if self.visual_mode:
+						self.s_screen = pygame.display.set_mode(
+							(self.PLAYGROUND_WIDTH * 10 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
+							32)
+						self.visual_mode = False
+					else:
+						self.s_screen = pygame.display.set_mode(
+							(self.PLAYGROUND_WIDTH * 20 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
+							32)
+						self.visual_mode = True
+						
+				if event.type == KEYDOWN and event.key == K_p:
+					self.pause()
 			self.s_screen.fill(THECOLORS["white"])  # 填充白屏
-			self.s_screen.blit(self.si_food,
-			                   (game.food_pos[0] * 10 - 4, game.food_pos[1] * 10 - 5))  # 填充食物图片
+			game.next(agent.get_next_direction(game))  # 获取下一步方向
+			if self.visual_mode:  #可视化模式
+				strategy_max = agent.strategy.max()
+				strategy_min = agent.strategy.min()
+				for i in range(0, 20):
+					for j in range(0, 20):
+						bright = (agent.strategy[i][j] - strategy_min) / (strategy_max - strategy_min) * 255
+						pygame.draw.rect(self.s_screen, [bright] * 3,
+						                 [i * 10 + 300, j * 10, 10, 10], 0)
+						pygame.draw.line(self.s_screen,THECOLORS["black"], (300, 0), (300, 200), 2)
+			self.s_screen.blit(self.si_food, (game.food_pos[0] * 10 - 4, game.food_pos[1] * 10 - 5))  # 填充食物图片
 			for i in game.bombs:  # 填充炸弹图片
 				self.s_screen.blit(self.si_bomb, [x * 10 - 2 for x in i])
 			for i in game.snakes:  # 填充蛇图片
@@ -100,7 +121,7 @@ class UI(object):
 			if game.deathflag:  # 死亡判定
 				self.f_gameover(game.ate)  # 游戏结束画面
 				game.reset()
-			self.s_infoarea.fill(THECOLORS["gray"])  # 填充信息区域各种信息
+			self.s_infoarea.fill(THECOLORS["gray"])  # 开始填充信息区域各种信息
 			pygame.draw.line(self.s_infoarea, THECOLORS["black"], (0, 0), (0, self.INFOAREA_HEIGHT), 3)  # 分隔线
 			self.s_infoarea.blit(self.sf_small_arial_level, (10, 5))  # 难度信息提示
 			self.s_infoarea.blit(self.sf_small_arial_ate, (10, 20))  # 食物数量信息
@@ -119,7 +140,9 @@ class UI(object):
 			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 将实时填充后的信息Surface填充至屏幕Surface
 			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
 			self.fps_clock.tick(self.fps)  # FPS等待时钟
-			
+			if self.is_pause:
+				self.pause()
+	
 	def f_show_number(self, surface, number, position):
 		"""
 		在目标Surface上填充数字
@@ -212,3 +235,19 @@ class UI(object):
 					break
 			pygame.display.flip()
 			self.fps_clock.tick(5)
+
+	def pause(self):  # 暂停
+		"""
+		暂停游戏，方便查看当前状态。
+		"""
+		while True:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT or event.type == KEYDOWN and event.key == K_q:
+					pygame.quit()
+					sys.exit()
+				if event.type == pygame.KEYDOWN and event.key == K_p:  # 继续
+					self.is_pause = False
+					return
+				if event.type == pygame.KEYDOWN and event.key == K_n:
+					self.is_pause = True
+					return

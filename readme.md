@@ -14,6 +14,7 @@ Python版本: Python3.6或以上
 * tensorflow / tensorflow-gpu
 * h5py
 * numpy
+* matplotlib
 
 ## 游戏说明
 
@@ -46,6 +47,8 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
 
 本项目内拥有数个AI逻辑脚本，详细见下文的各脚本说明。
 
+**游戏中按F键可切换可视化部分，P键暂停，N键在暂停时单步进行游戏。**
+
 ### 使用方法
 
 首先import
@@ -62,7 +65,7 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
     
 游戏界面对象，通过pygame模块创建可视的游戏界面。
     
-    ui = Snakey.UI(full_screen = False, fps = 60)
+    ui = Snakey.UI(fps = 60)
     
 通过UI类的show(game, agent)函数创建游戏窗口。
 
@@ -76,7 +79,7 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
     agent = Snakey.agent.Logic()
     
     while True:
-        game.next(agent.get_next_direction(game.head_pos, game.food_pos, game.snakes))
+        game.next(agent.get_next_direction(game))
         if game.deathflag:
             print("Gameover. score:", game.ate)
             game.reset()
@@ -90,6 +93,24 @@ DRL_Snakey.core.UI为游戏界面显示相关。通过pygame包来创建可视�
 
 DRL_Snakey.agent为智能体部分。智能体会读取游戏中每步的状态，应用相对的决策方法（普通算法或神经网络等等）
 进行决策，并给出反应。
+
+Agent类:
+
+    class Agent(object):
+	def get_next_direction(self, Game):
+		"""
+		根据智能体对当前环境的判断选择下一步前进的方向。
+		:return: 方向["W", "S", "A", "D"]
+		"""
+		pass
+	
+	def custom_function(self, Game):
+		"""
+		给不同的agnet预留的自定义函数，用来调试或数据可视化。
+		"""
+		pass
+
+ps. 请多多编写自己的agent然后pull request
 
 #### DRL_Snakey.Agent.Logic
 
@@ -115,7 +136,11 @@ DP(Dynamic Programming)动态规划-马尔科夫决策法。
 	eat_self_reward: 吃到自己的回报
 	food_reward: 吃到食物的回报
 
-此AI在20次尝试中最好成绩为87，平均值为59.2。
+按F打开可视化模式后，可观察每一步动作所基于的各点价值图像。
+
+实际操作中会发现，AI可以根据价值的判断避开自身，并且在食物环境恶劣的情况下选择在安全地带迂回等待。
+
+此AI在20次尝试中最好成绩为103，平均值为59.2。
 
 ![DP演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/DP_play.gif?raw=true)
 

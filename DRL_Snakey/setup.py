@@ -6,7 +6,7 @@ import setuptools
 
 setuptools.setup(
     name="DRL_Snakey",
-    version="0.6",
+    version="0.8",
     author="Pineapple Cstrikest",
     author_email="cstrikest@gmail.com",
     description="A Deep Reinforcement Learning study package. With game environment.",
