@@ -112,7 +112,7 @@ Agent类:
 
 ps. 请多多编写自己的agent然后pull request
 
-#### DRL_Snakey.Agent.Logic
+### DRL_Snakey.Agent.Logic
 
 一个简单的演示用逻辑AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。
 
@@ -124,7 +124,7 @@ ps. 请多多编写自己的agent然后pull request
 
 ![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/2.gif?raw=true)
 
-#### DRL_Snakey.Agent.DP
+### DRL_Snakey.Agent.DP
 
 DP(Dynamic Programming)动态规划-马尔科夫决策法。
 
