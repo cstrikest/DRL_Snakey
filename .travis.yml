@@ -1,7 +1,6 @@
 language: python
-script:
-  pip install numpy
-  pip install tensorflow
-  pip install h5py
-  pip install pygame
-  pip install matplotlib
+python:
+  - '3.5'
+install:
+  - pip install -r ./requirements.txt
+script: python script_example.py
