@@ -3,6 +3,8 @@
 深度强化学习贪吃蛇AI与游戏环境。
 
 ![Build](http://img.shields.io/travis/cstrikest/DRL_Snakey.svg)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/DRL_Snakey.svg)
+
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
 ## 环境
