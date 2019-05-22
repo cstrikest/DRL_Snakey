@@ -36,6 +36,7 @@ class DP(Agent):
 		:param Game: 游戏
 		"""
 		
+		game_map = Game.get_map(False)
 		temp_action = ["W", "S", "A", "D"]
 		temp_action.remove(self.get_opposite_direction(Game.direction))  # 排除无效动作，贪吃蛇游戏中是与前进方向相反的动作。
 		for _ in range(0, self.iteration):
@@ -45,53 +46,35 @@ class DP(Agent):
 					temp = 0
 					for a in temp_action:
 						reward = self.walk_reward  # 每走一步默认回报
-						if self.next(a, (i, j)) in Game.snakes[: -1]:
+						x, y = self.next(a, (i, j))
+						if (x, y) in Game.snakes[: -1]:
 							reward = self.eat_self_reward  # 下一步吃到自己的回报
-						if self.next(a, (i, j)) == Game.food_pos:
+						if (x, y) == Game.food_pos:
 							reward = self.food_reward  # 下一步吃到食物的回报
-						temp += 1 / len(temp_action) * (
-											  reward + self.discount * self.get_strategy(self.strategy, a, [i, j]))
+						temp += 1 / len(temp_action) * (reward + self.discount * self.strategy[x][y])
 					temp_strategy[i][j] = temp
 			temp_strategy[Game.food_pos[0]][Game.food_pos[1]] = 0  # 食物点价值最高
 			self.strategy = temp_strategy
 	
-	def get_strategy(self, strategy, action, strategy_pos):
+	def custom_function(self, Game):
 		"""
-		根据方向获取下一个点的价值。
-		:param strategy: 价值矩阵
-		:param action: 动作方向
-		:param strategy_pos: 作用位置
-		:return: 下一个点的价值
+		Agent类成员函数，保有的自定义函数。这里为输出价值矩阵的可视化图。此函数会重新计算价值矩阵。
+		:param Game: 游戏
 		"""
-		if action == "A":
-			if strategy_pos[0] == 0:
-				return strategy[self.range[0] - 1][strategy_pos[1]]
-			else:
-				return strategy[strategy_pos[0] - 1][strategy_pos[1]]
-		if action == "D":
-			if strategy_pos[0] == self.range[0] - 1:
-				return strategy[0][strategy_pos[1]]
-			else:
-				return strategy[strategy_pos[0] + 1][strategy_pos[1]]
-		if action == "W":
-			if strategy_pos[1] == 0:
-				return strategy[strategy_pos[0]][self.range[1] - 1]
-			else:
-				return strategy[strategy_pos[0]][strategy_pos[1] - 1]
-		if action == "S":
-			if strategy_pos[1] == self.range[1] - 1:
-				return strategy[strategy_pos[0]][0]
-			else:
-				return strategy[strategy_pos[0]][strategy_pos[1] + 1]
-		if action == "N":
-			return strategy[strategy_pos[0]][strategy_pos[1]]
+		self.strategy = np.zeros((20, 20))
+		for _ in range(0, self.iteration):
+			self.frash_state_value(Game)
+		plt.matshow(self.strategy.T)
+		plt.colorbar()
+		plt.title(str(Game.food_pos))
+		plt.show()
 	
 	def next(self, direction, pos):
 		"""
-		根据方向返回下一个点的坐标。
+		根据方向返回下一步时点的坐标。
 		:param direction: 方向
-		:param pos: 当前点
-		:return: 下一个点
+		:param pos: 当前坐标
+		:return:
 		"""
 		x = pos[0]
 		y = pos[1]
@@ -112,19 +95,6 @@ class DP(Agent):
 		if y > self.range[1] - 1:
 			y = 0
 		return x, y
-	
-	def custom_function(self, Game):
-		"""
-		Agent类成员函数，保有的自定义函数。这里为输出价值矩阵的可视化图。此函数会重新计算价值矩阵。
-		:param Game: 游戏
-		"""
-		self.strategy = np.zeros((20, 20))
-		for _ in range(0, self.iteration):
-			self.frash_state_value(Game)
-		plt.matshow(self.strategy.T)
-		plt.colorbar()
-		plt.title(str(Game.food_pos))
-		plt.show()
 	
 	@staticmethod
 	def get_opposite_direction(now_direction):
@@ -154,6 +124,6 @@ class DP(Agent):
 		temp_action.remove(self.get_opposite_direction(Game.direction))
 		value = {}
 		for a in temp_action:
-			value[a] = self.get_strategy(self.strategy, a, Game.head_pos)
+			value[a] = self.strategy[self.next(a, Game.head_pos)]
 		optimal_solution = max(value, key = value.get)
 		return optimal_solution

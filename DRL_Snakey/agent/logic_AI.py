@@ -2,9 +2,9 @@
 
 __author__ = "Yxzh"
 
-
 import random
 from DRL_Snakey.agent import Agent
+
 
 class Logic(Agent):
 	def next(self, direction, pos):  # 预测下一步位置
@@ -28,8 +28,7 @@ class Logic(Agent):
 			y = PLAYGROUND_HEIGHT - 1
 		if y > PLAYGROUND_HEIGHT - 1:
 			y = 0
-		
-		return (x, y)
+		return x, y
 	
 	def elude(self, pos, snakes):  # 躲避
 		l = ["W", "S", "A", "D"]
@@ -45,33 +44,31 @@ class Logic(Agent):
 			temp = l[random.randrange(0, 4)]
 		return temp
 	
-	def get_next_direction(self, pos, food_pos, snakes, now_direction):
+	def get_next_direction(self, Game):
 		"""
 		根据环境，通过决策算法返回前进的方向。这是决定策略类中必不可少的一个函数。
-		:param pos: 当前位置
-		:param food_pos: 食物位置
-		:param snakes: 蛇数组
+		:param Game: 游戏
 		:return: 决定的前进方向
 		"""
-		Hs = pos[0] - food_pos[0]  # 横向差值
-		Vs = pos[1] - food_pos[1]  # 纵向差值
+		Hs = Game.head_pos[0] - Game.food_pos[0]  # 横向差值
+		Vs = Game.head_pos[1] - Game.food_pos[1]  # 纵向差值
 		
 		if abs(Hs) > abs(Vs):
 			if Hs < 0:
 				temp = "D"
-				if self.next(temp, pos) in snakes:
-					return self.elude(pos, snakes)[0]
+				if self.next(temp, Game.head_pos) in Game.snakes:
+					return self.elude(Game.head_pos, Game.snakes)[0]
 			else:
 				temp = "A"
-				if self.next(temp, pos) in snakes:
-					return self.elude(pos, snakes)[0]
+				if self.next(temp, Game.head_pos) in Game.snakes:
+					return self.elude(Game.head_pos, Game.snakes)[0]
 		else:
 			if Vs < 0:
 				temp = "S"
-				if self.next(temp, pos) in snakes:
-					return self.elude(pos, snakes)[0]
+				if self.next(temp, Game.head_pos) in Game.snakes:
+					return self.elude(Game.head_pos, Game.snakes)[0]
 			else:
 				temp = "W"
-				if self.next(temp, pos) in snakes:
-					return self.elude(pos, snakes)[0]
+				if self.next(temp, Game.head_pos) in Game.snakes:
+					return self.elude(Game.head_pos, Game.snakes)[0]
 		return temp
