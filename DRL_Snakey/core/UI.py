@@ -8,6 +8,7 @@ from pygame.locals import *
 from pygame.color import THECOLORS
 import pygame.font
 
+path = __file__.replace("core/UI.py", "")
 
 class UI(object):
 	def __init__(self, visual_mode = True, fps = 60):
@@ -34,11 +35,11 @@ class UI(object):
 		self.is_pause = False
 		self.s_infoarea = pygame.Surface((self.PLAYGROUND_WIDTH * 5, self.PLAYGROUND_HEIGHT * 10), 0, 32)  # 信息区域Surface
 		self.s_pltarea = pygame.Surface((self.PLAYGROUND_WIDTH * 10, self.PLAYGROUND_HEIGHT * 10), 0, 32)  # 图表区域Surface
-		self.si_snake = pygame.image.load("images/snake.png").convert_alpha()  # 加载图片
-		self.si_food = pygame.image.load("images/Pineapple.png").convert_alpha()
-		self.si_deadsnake = pygame.image.load("images/dead_snake.png").convert_alpha()
-		self.si_gamestart = pygame.image.load("images/game_start.png").convert_alpha()
-		self.si_bomb = pygame.image.load("images/bm.png").convert_alpha()
+		self.si_snake = pygame.image.load(path + "images/snake.png").convert_alpha()  # 加载图片
+		self.si_food = pygame.image.load(path + "images/Pineapple.png").convert_alpha()
+		self.si_deadsnake = pygame.image.load(path + "images/dead_snake.png").convert_alpha()
+		self.si_gamestart = pygame.image.load(path + "images/game_start.png").convert_alpha()
+		self.si_bomb = pygame.image.load(path + "images/bm.png").convert_alpha()
 		pygame.font.init()  # 初始化字体
 		f_arial = pygame.font.SysFont("arial", 24)  # 加载字体
 		f_optima = pygame.font.SysFont("optima", 35)

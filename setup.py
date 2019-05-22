@@ -9,7 +9,7 @@ with open("README.md", "r") as fh:
 	long_description = fh.read()
 setup(
 	name = "DRL_Snakey",
-	version = "1.1.1",
+	version = "1.1.1r",
 	description = "A Deep Reinforcement Learning study package. With game environment.",
 	long_description = long_description,
 	long_description_content_type = "text/markdown",

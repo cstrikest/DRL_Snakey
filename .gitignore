@@ -1,7 +1,6 @@
 score.s
 dist/
 DRL_Snakey.egg-info
-requirements.txt
 setup.py
 
 # Created by https://www.gitignore.io/api/python
