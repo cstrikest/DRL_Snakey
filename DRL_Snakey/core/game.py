@@ -95,23 +95,23 @@ class Game(object):
 			self.deathflag = True
 		return self.snakes, self.head_pos, self.food_pos, self.bombs, self.ate
 	
-	def get_map(self, flattening = False):
+	def get_map(self, flat = False):
 		"""
 		获得游戏地图信息
 		:return: 游戏地图信息，从左上到右下按行排列，将20×20的地图扁平化为400个地图数据。
-				地图块上是蛇则标志位1，食物为2，炸弹为3，空为0，蛇与食物重叠则为-1。
+				地图块上是蛇则标志为1，食物为2，炸弹为3，空为0，蛇与食物重叠则为-1。
 		"""
 		
-		game_map = np.full((20, 20), 0)
+		game_map = np.zeros((20, 20))
 		for S in self.snakes:
-			game_map[S[1]][S[0]] = 1
+			game_map[S] = 1
 		for B in self.bombs:
-			game_map[B[1]][B[0]] = 3
+			game_map[B] = 3
 		if self.head_pos == self.food_pos:
-			game_map[self.food_pos[1]][self.food_pos[0]] = -1
+			game_map[self.food_pos] = -1
 		else:
-			game_map[self.food_pos[1]][self.food_pos[0]] = 2
-		if flattening:
+			game_map[self.food_pos] = 2
+		if flat:
 			return game_map.reshape((400,))
 		else:
 			return game_map

@@ -12,9 +12,9 @@ class MC(Agent):
 		self.discount = discount
 		self.iteration = iteration
 		
-	def custom_function(self, head_pos, food_pos, snakes, now_direction):
+	def custom_function(self, Game):
 		pass
 	
-	def get_next_direction(self, head_pos, food_pos, snakes, now_direction):
+	def get_next_direction(self, game):
 		pass
 	

@@ -7,7 +7,8 @@ from DRL_Snakey.agent import Agent
 
 
 class Logic(Agent):
-	def next(self, direction, pos):  # 预测下一步位置
+	@staticmethod
+	def next(direction, pos):  # 预测下一步位置
 		x = pos[0]
 		y = pos[1]
 		PLAYGROUND_WIDTH = 20
@@ -44,31 +45,37 @@ class Logic(Agent):
 			temp = l[random.randrange(0, 4)]
 		return temp
 	
-	def get_next_direction(self, Game):
+	def visual_mode(self, Game, pos):
+		return 0
+	
+	def custom_function(self, Game):
+		pass
+	
+	def get_next_direction(self, game):
 		"""
 		根据环境，通过决策算法返回前进的方向。这是决定策略类中必不可少的一个函数。
-		:param Game: 游戏
+		:param game: 游戏
 		:return: 决定的前进方向
 		"""
-		Hs = Game.head_pos[0] - Game.food_pos[0]  # 横向差值
-		Vs = Game.head_pos[1] - Game.food_pos[1]  # 纵向差值
+		Hs = game.head_pos[0] - game.food_pos[0]  # 横向差值
+		Vs = game.head_pos[1] - game.food_pos[1]  # 纵向差值
 		
 		if abs(Hs) > abs(Vs):
 			if Hs < 0:
 				temp = "D"
-				if self.next(temp, Game.head_pos) in Game.snakes:
-					return self.elude(Game.head_pos, Game.snakes)[0]
+				if self.next(temp, game.head_pos) in game.snakes:
+					return self.elude(game.head_pos, game.snakes)[0]
 			else:
 				temp = "A"
-				if self.next(temp, Game.head_pos) in Game.snakes:
-					return self.elude(Game.head_pos, Game.snakes)[0]
+				if self.next(temp, game.head_pos) in game.snakes:
+					return self.elude(game.head_pos, game.snakes)[0]
 		else:
 			if Vs < 0:
 				temp = "S"
-				if self.next(temp, Game.head_pos) in Game.snakes:
-					return self.elude(Game.head_pos, Game.snakes)[0]
+				if self.next(temp, game.head_pos) in game.snakes:
+					return self.elude(game.head_pos, game.snakes)[0]
 			else:
 				temp = "W"
-				if self.next(temp, Game.head_pos) in Game.snakes:
-					return self.elude(Game.head_pos, Game.snakes)[0]
+				if self.next(temp, game.head_pos) in game.snakes:
+					return self.elude(game.head_pos, game.snakes)[0]
 		return temp

@@ -1,10 +1,8 @@
 score.s
-DRL_Snakey/dist/
-DRL_Snakey/DRL_Snakey.egg-info
-DRL_Snakey/LICENSE
-DRL_Snakey/README.md
-DRL_Snakey/requirements.txt
-DRL_Snakey/setup.py
+dist/
+DRL_Snakey.egg-info
+requirements.txt
+setup.py
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python

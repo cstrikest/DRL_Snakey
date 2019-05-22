@@ -21,6 +21,9 @@ class UI(object):
 		self.PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 		self.INFOAREA_WIDTH = 100
 		self.INFOAREA_HEIGHT = 200  # 信息区域大小
+		self.s_screen = pygame.display.set_mode(
+			(self.PLAYGROUND_WIDTH * 10 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
+			32)
 		self.visual_mode = visual_mode  # 显示模式 0为默认 1为图像模式
 		WINDOW_TITLE = "Snacky"  # 屏幕标题
 		allowed_event = [pygame.KEYDOWN, pygame.QUIT]  # 事件列表
@@ -29,14 +32,6 @@ class UI(object):
 		self.fps_clock = pygame.time.Clock()  # 创建FPS时钟对象
 		pygame.event.set_allowed(allowed_event)  # 设置事件过滤
 		self.is_pause = False
-		if self.visual_mode:
-			self.s_screen = pygame.display.set_mode(
-				(self.PLAYGROUND_WIDTH * 20 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
-				32)
-		else:
-			self.s_screen = pygame.display.set_mode(
-				(self.PLAYGROUND_WIDTH * 10 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
-				32)
 		self.s_infoarea = pygame.Surface((self.PLAYGROUND_WIDTH * 5, self.PLAYGROUND_HEIGHT * 10), 0, 32)  # 信息区域Surface
 		self.s_pltarea = pygame.Surface((self.PLAYGROUND_WIDTH * 10, self.PLAYGROUND_HEIGHT * 10), 0, 32)  # 图表区域Surface
 		self.si_snake = pygame.image.load("images/snake.png").convert_alpha()  # 加载图片
@@ -80,6 +75,14 @@ class UI(object):
 		:param game: 游戏物理引擎类
 		:param agent: 决策逻辑类
 		"""
+		if agent.default_visual_mode:
+			self.s_screen = pygame.display.set_mode(
+				(self.PLAYGROUND_WIDTH * 20 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
+				32)
+		else:
+			self.s_screen = pygame.display.set_mode(
+				(self.PLAYGROUND_WIDTH * 10 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
+				32)
 		self.start()  # 开始游戏画面
 		while True:  # 屏幕循环
 			for event in pygame.event.get():  # 事件循环
@@ -99,20 +102,17 @@ class UI(object):
 							(self.PLAYGROUND_WIDTH * 20 + self.INFOAREA_WIDTH, self.PLAYGROUND_HEIGHT * 10), 0,
 							32)
 						self.visual_mode = True
-						
+				
 				if event.type == KEYDOWN and event.key == K_p:
 					self.pause()
 			self.s_screen.fill(THECOLORS["white"])  # 填充白屏
 			game.next(agent.get_next_direction(game))  # 获取下一步方向
-			if self.visual_mode:  #可视化模式
-				strategy_max = agent.strategy.max()
-				strategy_min = agent.strategy.min()
+			if self.visual_mode:  # 可视化模式
 				for i in range(0, 20):
 					for j in range(0, 20):
-						bright = (agent.strategy[i][j] - strategy_min) / (strategy_max - strategy_min) * 255
-						pygame.draw.rect(self.s_screen, [bright] * 3,
+						pygame.draw.rect(self.s_screen, [agent.visual_mode(game, (i, j)) * 255] * 3,
 						                 [i * 10 + 300, j * 10, 10, 10], 0)
-						pygame.draw.line(self.s_screen,THECOLORS["black"], (300, 0), (300, 200), 2)
+			pygame.draw.line(self.s_screen, THECOLORS["black"], (300, 0), (300, 200), 2)
 			self.s_screen.blit(self.si_food, (game.food_pos[0] * 10 - 4, game.food_pos[1] * 10 - 5))  # 填充食物图片
 			for i in game.bombs:  # 填充炸弹图片
 				self.s_screen.blit(self.si_bomb, [x * 10 - 2 for x in i])
@@ -235,7 +235,7 @@ class UI(object):
 					break
 			pygame.display.flip()
 			self.fps_clock.tick(5)
-
+	
 	def pause(self):  # 暂停
 		"""
 		暂停游戏，方便查看当前状态。

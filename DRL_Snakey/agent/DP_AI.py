@@ -4,7 +4,6 @@ __author__ = "Yxzh"
 
 from DRL_Snakey.agent import Agent
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 class DP(Agent):
@@ -22,13 +21,15 @@ class DP(Agent):
 		:param eat_self_reward: 吃到自己的回报
 		:param food_reward: 吃到食物的回报
 		"""
+		self.default_visual_mode = True
 		self.discount = discount
 		self.strategy = np.zeros((20, 20))
-		self.range = (20, 20)
 		self.iteration = iteration
 		self.walk_reward = walk_reward
 		self.eat_self_reward = eat_self_reward
 		self.food_reward = food_reward
+		self.strategy_max = 0
+		self.strategy_min = 0
 	
 	def frash_state_value(self, Game):
 		"""
@@ -36,18 +37,17 @@ class DP(Agent):
 		:param Game: 游戏
 		"""
 		
-		game_map = Game.get_map(False)
 		temp_action = ["W", "S", "A", "D"]
 		temp_action.remove(self.get_opposite_direction(Game.direction))  # 排除无效动作，贪吃蛇游戏中是与前进方向相反的动作。
 		for _ in range(0, self.iteration):
 			temp_strategy = np.copy(self.strategy)
-			for i in range(0, self.range[0]):
-				for j in range(0, self.range[1]):
+			for i in range(0, 20):
+				for j in range(0, 20):
 					temp = 0
 					for a in temp_action:
 						reward = self.walk_reward  # 每走一步默认回报
 						x, y = self.next(a, (i, j))
-						if (x, y) in Game.snakes[: -1]:
+						if (x, y) in Game.snakes[: -3]:
 							reward = self.eat_self_reward  # 下一步吃到自己的回报
 						if (x, y) == Game.food_pos:
 							reward = self.food_reward  # 下一步吃到食物的回报
@@ -57,17 +57,7 @@ class DP(Agent):
 			self.strategy = temp_strategy
 	
 	def custom_function(self, Game):
-		"""
-		Agent类成员函数，保有的自定义函数。这里为输出价值矩阵的可视化图。此函数会重新计算价值矩阵。
-		:param Game: 游戏
-		"""
-		self.strategy = np.zeros((20, 20))
-		for _ in range(0, self.iteration):
-			self.frash_state_value(Game)
-		plt.matshow(self.strategy.T)
-		plt.colorbar()
-		plt.title(str(Game.food_pos))
-		plt.show()
+		pass
 	
 	def next(self, direction, pos):
 		"""
@@ -87,12 +77,12 @@ class DP(Agent):
 		if direction == "D":
 			x += 1
 		if x < 0:
-			x = self.range[0] - 1
-		if x > self.range[0] - 1:
+			x = 20 - 1
+		if x > 20 - 1:
 			x = 0
 		if y < 0:
-			y = self.range[1] - 1
-		if y > self.range[1] - 1:
+			y = 20 - 1
+		if y > 20 - 1:
 			y = 0
 		return x, y
 	
@@ -112,18 +102,29 @@ class DP(Agent):
 		if now_direction == "D":
 			return "A"
 	
-	def get_next_direction(self, Game):
+	def visual_mode(self, Game, pos):
+		"""
+		返回指定点的标准化价值。
+		:param Game: 游戏
+		:param pos: 坐标
+		:return: 标准化价值
+		"""
+		return (self.strategy[pos] - self.strategy_min) / (self.strategy_max - self.strategy_min)
+	
+	def get_next_direction(self, game):
 		"""
 		Agent类成员函数，根据当前环境进行决策并返回前进方向。
-		:param Game: 游戏
+		:param game: 游戏
 		:return: 决策方向
 		"""
 		self.strategy = np.zeros((20, 20))
-		self.frash_state_value(Game)
+		self.frash_state_value(game)
 		temp_action = ["W", "S", "A", "D"]
-		temp_action.remove(self.get_opposite_direction(Game.direction))
+		temp_action.remove(self.get_opposite_direction(game.direction))
 		value = {}
 		for a in temp_action:
-			value[a] = self.strategy[self.next(a, Game.head_pos)]
+			value[a] = self.strategy[self.next(a, game.head_pos)]
 		optimal_solution = max(value, key = value.get)
+		self.strategy_max = self.strategy.max()
+		self.strategy_min = self.strategy.min()
 		return optimal_solution

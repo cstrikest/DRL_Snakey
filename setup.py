@@ -7,16 +7,21 @@ from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
 	long_description = fh.read()
-with open('requirements.txt') as f:
-	requirements = [l for l in f.read().splitlines() if l]
 setup(
 	name = "DRL_Snakey",
-	version = "1.0",
+	version = "1.1.1",
 	description = "A Deep Reinforcement Learning study package. With game environment.",
 	long_description = long_description,
 	long_description_content_type = "text/markdown",
 	license = "GPL",
-	install_requires = requirements,
+	include_package_data = True,
+	install_requires = [
+		"numpy",
+		"tensorflow",
+		"h5py",
+		"pygame",
+		"matplotlib"
+	],
 	author = "YANG Xuezhi",
 	author_email = "cstrikest@gmail.com",
 	url = "https://github.com/cstrikest/DRL_Snakey",
