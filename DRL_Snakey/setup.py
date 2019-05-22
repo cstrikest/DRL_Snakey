@@ -10,16 +10,23 @@ with open("README.md", "r") as fh:
 with open('requirements.txt') as f:
 	requirements = [l for l in f.read().splitlines() if l]
 setup(
-	name = "DRL_Snakey",  # 项目名
-	version = "0.9",  # 版本号
-	description = "A Deep Reinforcement Learning study package. With game environment.",  # 简介
-	long_description = long_description,  # 长简介 这里使用的 readme 内容
+	name = "DRL_Snakey",
+	version = "1.0",
+	description = "A Deep Reinforcement Learning study package. With game environment.",
+	long_description = long_description,
 	long_description_content_type = "text/markdown",
-	license = "GPL",  # 授权
-	install_requires = requirements,  # 依赖
-	author = "YANG Xuezhi",  # 作者
-	author_email = "cstrikest@gmail.com",  # 邮箱
-	url = "https://github.com/cstrikest/DRL_Snakey",  # 地址
+	license = "GPL",
+	install_requires = requirements,
+	author = "YANG Xuezhi",
+	author_email = "cstrikest@gmail.com",
+	url = "https://github.com/cstrikest/DRL_Snakey",
 	packages = find_packages(),
-	zip_safe = True
+	zip_safe = True,
+	classifiers = [
+		"Programming Language :: Python :: 3.6",
+		"Environment :: MacOS X",
+		"License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+		"Natural Language :: Chinese (Simplified)",
+		"Topic :: Scientific/Engineering :: Artificial Intelligence",
+	],
 )

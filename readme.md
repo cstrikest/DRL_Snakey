@@ -2,8 +2,15 @@
 
 深度强化学习贪吃蛇AI与游戏环境。
 
-![Build](http://img.shields.io/travis/cstrikest/DRL_Snakey.svg)
+[![Build Status](https://travis-ci.org/cstrikest/DRL_Snakey.svg?branch=master)](https://travis-ci.org/cstrikest/DRL_Snakey)
+![GitHub](https://img.shields.io/github/license/cstrikest/DRL_Snakey.svg)
+[![Readme](https://img.shields.io/badge/Readme-Chinese-red.svg)](http://github.com/cstrikest/DRL_Snakey)
+
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/DRL_Snakey.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/cstrikest/DRL_Snakey.svg)
+
+![PyPI](https://img.shields.io/pypi/v/DRL_Snakey.svg)
+![GitHub release](https://img.shields.io/github/release/cstrikest/DRL_Snakey.svg)
 
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 

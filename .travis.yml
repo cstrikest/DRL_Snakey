@@ -2,5 +2,9 @@ language: python
 python:
   - '3.6'
 install:
-  - pip install -r ./requirements.txt
+  - pip install numpy
+  - pip install tensorflow
+  - pip install h5py
+  - pip install pygame
+  - pip install matplotlib
 script: python -c "import DRL_Snakey as Snakey"
