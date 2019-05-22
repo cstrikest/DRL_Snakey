@@ -1,0 +1,5 @@
+numpy
+h5py
+pygame
+tensorflow
+matplotlib
