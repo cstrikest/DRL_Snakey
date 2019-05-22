@@ -2,6 +2,7 @@
 
 深度强化学习贪吃蛇AI与游戏环境。
 
+![Build](http://img.shields.io/travis/cstrikest/DRL_Snakey.svg)
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
 ## 环境
@@ -86,12 +87,12 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
             
 ## DRL_Snakey说明
 
-DRL_Snakey分为游戏环境DRL_Snakey.core，智能体DRL_Snakey.agent与DRL_Snakey.utlis组件两部分组成。
+DRL_Snakey分为游戏环境`DRL_Snakey.core`，智能体`DRL_Snakey.agent`与`DRL_Snakey.utlis`组件三部分组成。
 
-其中DRL_Snakey.core.Game为贪吃蛇游戏的基本行动规则，死亡判定以及地图查看等功能。可以视为游戏的本体。
-DRL_Snakey.core.UI为游戏界面显示相关。通过pygame包来创建可视化的游戏界面。
+其中`DRL_Snakey.core.Game`为贪吃蛇游戏的基本行动规则，死亡判定以及地图查看等功能。可以视为游戏的本体。
+`DRL_Snakey.core.UI`为游戏界面显示相关。通过pygame包来创建可视化的游戏界面。
 
-DRL_Snakey.agent为智能体部分。智能体会读取游戏中每步的状态，应用相对的决策方法（普通算法或神经网络等等）
+`DRL_Snakey.agent`为智能体部分。智能体会读取游戏中每步的状态，应用相对的决策方法（普通算法或神经网络等等）
 进行决策，并给出反应。
 
 Agent类:
@@ -116,8 +117,8 @@ ps. 请多多编写自己的agent然后pull request
 
 一个简单的演示用逻辑AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。
 
-通过计算蛇头位置与食物的水平竖直差，以之字形接近食物。并且在决策方向前，会通过Logic.next()预测
-下一步的位置，并调用Logic.elude()依次尝试各个方向来避免与自己相撞。但是因为只能预测下一步的危险情况，
+通过计算蛇头位置与食物的水平竖直差，以之字形接近食物。并且在决策方向前，会通过`Logic.next()`预测
+下一步的位置，并调用`Logic.elude()`依次尝试各个方向来避免与自己相撞。但是因为只能预测下一步的危险情况，
 所以此AI并不具有很高智能，只是作为演示使用。
 
 此AI在20次尝试中最好成绩为68，平均值为49.6。
@@ -129,6 +130,8 @@ ps. 请多多编写自己的agent然后pull request
 DP(Dynamic Programming)动态规划-马尔科夫决策法。
 
 每一步都通过迭代贝尔曼方程计算当前各点的价值，创建价值矩阵。并且朝周围价值最高的点前进。
+
+构造函数参数说明:
 
     discount: 衰减率，贝尔曼方程中对于非即时回报的衰减率。
 	iteration: 推算价值矩阵的迭代次数。

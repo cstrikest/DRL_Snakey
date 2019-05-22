@@ -1,7 +1,7 @@
 language: python
-install:
-  numpy
-  pygame
-  tensorflow
-  h5py
-  matplotlib
+script:
+  pip install numpy
+  pip install tensorflow
+  pip install h5py
+  pip install pygame
+  pip install matplotlib
