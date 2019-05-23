@@ -4,13 +4,16 @@
 
 [![Build Status](https://travis-ci.org/cstrikest/DRL_Snakey.svg?branch=master)](https://travis-ci.org/cstrikest/DRL_Snakey)
 ![GitHub](https://img.shields.io/github/license/cstrikest/DRL_Snakey.svg)
-[![Readme](https://img.shields.io/badge/Readme-Chinese-red.svg)](http://github.com/cstrikest/DRL_Snakey)
 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/DRL_Snakey.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/cstrikest/DRL_Snakey.svg)
 
 ![PyPI](https://img.shields.io/pypi/v/DRL_Snakey.svg)
 ![GitHub release](https://img.shields.io/github/release/cstrikest/DRL_Snakey.svg)
+
+[![Readme](https://img.shields.io/badge/Readme-Chinese-red.svg)](http://github.com/cstrikest/DRL_Snakey)
+[![Readme](https://img.shields.io/badge/Readme-Japanese-orange.svg)](http://github.com/cstrikest/DRL_Snakey/README-JP.md)
+
 
 ![游戏开始界面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
 
@@ -31,29 +34,28 @@ Python版本: Python3.6或以上
 **演示文件: Snakey_play.py**
 
 此文件与DRL_Snakey包无关联，不含有任何AI部分，作为一个人类可以游玩的游戏进行演示。
+
 在使用包之前可以先运行该脚本查看游戏效果。
 
 ![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
 
 ### 规则
 
-游戏素材图片比较简陋。人类玩家游玩时，游戏内容设有等级划分，随着获取食物的数量上升，蛇前进的速度会变快。
+人类玩家游玩时，游戏内容设有等级划分，随着获取食物的数量上升，蛇前进的速度会变快。
 
-同时每增加一个难度会多出现一个触碰到便会游戏结束的炸弹。
+同时每增加一个难度会多出现一个触碰到便会游戏结束的炸弹。（默认为无炸弹）
 
-游戏在一个200×200像素的平面中运行，每10×10个像素作为一个单元。 右侧有计分面板。
+游戏在一个200×200像素的平面中运行，每10×10个像素作为一个单元。
 
 游戏右侧是一个100×200像素的信息面板。主要用到的信息会在右侧给出。
 
-使用方向键控制移动方向，任何时候都可以使用Q键退出。
+使用方向键控制移动方向，任何时候都可以使用Q键退出。游戏结束画面按R重新开始，`S`则会跳出计分板。游戏中按`P`键可以暂停游戏，暂停中N键可以让游戏单步进行,`F`键切换可视化模式。
 
-游戏结束画面按R重新开始，按S则会跳出计分板。
+除单独存在的演示脚本外，游戏主体主要由**游戏逻辑**，**图形引擎**，**智能体**三部分组成，运行时可以根据需要选择是否加载图形引擎显示游戏界面。
 
 ### AI部分说明
 
 AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使用界面时默认使用最快的刷新速度。
-
-除单独存在的演示脚本外，AI部分主要由**物理引擎**，**图形引擎**，**决策逻辑**三部分组成，运行时可以根据需要选择是否加载图形引擎显示游戏界面。
 
 本项目内拥有数个AI逻辑脚本，详细见下文的各脚本说明。
 

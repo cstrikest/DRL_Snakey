@@ -1,0 +1,157 @@
+# Deep Reinforcement Learning 深度强化学习贪吃蛇游戏 DRL_Snakey
+
+深層強化学習によるGluttonous Snake(食いしん坊蛇)ゲームAIとゲーム環境
+
+[![Build Status](https://travis-ci.org/cstrikest/DRL_Snakey.svg?branch=master)](https://travis-ci.org/cstrikest/DRL_Snakey)
+![GitHub](https://img.shields.io/github/license/cstrikest/DRL_Snakey.svg)
+
+![PyPI - Downloads](https://img.shields.io/pypi/dm/DRL_Snakey.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/cstrikest/DRL_Snakey.svg)
+
+![PyPI](https://img.shields.io/pypi/v/DRL_Snakey.svg)
+![GitHub release](https://img.shields.io/github/release/cstrikest/DRL_Snakey.svg)
+
+[![Readme](https://img.shields.io/badge/Readme-Chinese-red.svg)](http://github.com/cstrikest/DRL_Snakey)
+[![Readme](https://img.shields.io/badge/Readme-Japanese-orange.svg)](http://github.com/cstrikest/DRL_Snakey/README-JP.md)
+
+
+![ゲームスタート画面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
+
+## 開発環境
+
+Pythonバージョン: Python3.6または以上のバージョン
+
+### 外部ライブラリー
+
+* pygame
+* tensorflow / tensorflow-gpu
+* h5py
+* numpy
+* matplotlib
+
+## ゲームの説明
+
+**デモスクリプト: Snakey_play.py**
+
+このスクリプトはDRL_Snakeyパッケージと関係なく、AI部分は含まれていない人間が遊べるゲームのデモスクリプトである。
+
+パッケージを使用する前にこのスクリプトを実行してみよう。
+
+![ゲーム開始画面](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
+
+### ゲームのルール
+
+基本的には蛇をコントロールして食べ物を食べながら自分を咬まないようにゲームを進む。食物を食べると蛇自分の長さも伸びるので難易度がどんどん増えでいく。一応ボムのルールが入っているが、普通はボムなしにする。
+
+人間プレーヤーがゲームを遊ぶとき、スピードレベルがあり、食物を5個食べると蛇のスピードが上がる。
+
+ゲームは大きさ200×200ピクセル平面に行い、10×10ピクセルごとにブロックとして表す。ゲーム画面の右側はディテールエリアである。
+
+方向キーで蛇をコントロールすることができ、いつでも`Q`を押してゲームを閉じられる。ゲーム中にで`P`は一時停止、そして`N`はステッピングモードに変え、`F`はビジュアルモードに変える。
+
+ゲームオーバーするとゲームオーバー画面に入り、`R`を押すとゲームをやり直す。`S`はスコアボード。
+
+### AI部分の説明
+
+AIにはゲームのスピードやレベルが意味なし、そしてゲームUIのFPS値より一番速いスピードで実行する。（だが計算が思い場合FPSに達せないという状況もよくでる。）
+
+デモスクリプトを除き、ゲームは主に**ゲームルール**、**UIエンジン**、**エージェント**3部分で構成され、UIがなくてもゲームを実行することができる。
+
+本プロジェクトの中にいくつのAIスクリプトがあり、また以下に説明する。
+
+**ゲーム中に`F`キーを押すとビジュアルモードに変えることができる、どうぞ活用してください。**
+
+### パッケージの使用方法
+
+まずパッケージを導入する
+
+    import DRL_Snakey as Snakey
+    
+ゲームオブジェクトを宣言する。このクラスはゲームルールだけが入っている。(DRL_Snakey.Game)。
+
+    game = Snakey.Game(bomb = 0)
+    
+ゲームをコントロールするagentオブジェクト。ここで簡単なロジックaengtお使って例を挙げる。
+
+    agent = Snakey.agent.Logic()
+    
+pygameを使うゲームUIオブジェクト。
+    
+    ui = Snakey.UI(fps = 60)
+    
+UIクラスのshow(game, agent)関数でゲーム画面を起動する。
+
+    ui.show(game, agent)
+
+agentのトレーニングが必要とかUIがいらないときは、以下のスクリプトを使う。
+
+    import DRL_Snakey as Snakey
+    
+    game = Snakey.Game(bomb = 0)
+    agent = Snakey.agent.Logic()
+    
+    while True:
+        game.next(agent.get_next_direction(game))
+        if game.deathflag:
+            print("Gameover. score:", game.ate)
+            game.reset()
+            
+## DRL_Snakeyの説明
+
+DRL_Snakeyの3部分は、ゲームの基盤`DRL_Snakey.core`，agent`DRL_Snakey.agent`とツール`DRL_Snakey.utlis`である。
+
+その中の`DRL_Snakey.core.Game`はゲームの基盤ルールで，デス判定や地図の処理機能があり、ゲームの本体として扱う。
+`DRL_Snakey.core.UI`はUI関連であり、pygameを使って画面を作る。。
+
+`DRL_Snakey.agent`は知能体agnet部分である。Agentがゲームの状態を読み込み、そしてそれに対応する蛇の向きを決定する。（普通なアルゴリズムまたはニューラルネットワークなど）
+
+Agentクラス:
+
+    class Agent(object):
+	def get_next_direction(self, Game):
+		"""
+		知能体がゲームの状態に基づく判断により、蛇の向きを決定する。
+		:return: 方向["W", "S", "A", "D"]
+		"""
+		pass
+	
+	def custom_function(self, Game):
+		"""
+		カスタム関数。
+		"""
+		pass
+
+ps. 興味があればどうぞ自分のAgentを書き、そしてpull requestしてお願いしますね。
+
+### DRL_Snakey.Agent.Logic
+
+簡単なデモンストレーション用Agentで、ボムを完全に無視して食物だけ狙っていくアルゴリズムである。
+
+蛇の頭の座標と食物の座標を比べ、その水平と垂直の差を使って向きを判断する。
+
+このAIはゲーム20回のうちに最高得点が68，平均値は49.6である。
+
+![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/2.gif?raw=true)
+
+### DRL_Snakey.Agent.DP
+
+DP(Dynamic Programming)マルコフ決定過程-動的計画法。
+
+ベルマン最適方程式を使って方策往復を行い、地図の中の各ボロックの価値を計算する。そして周りの一番価値高いボロックにいく。
+
+コンストラクタパラメータの説明:
+
+    discount: 減衰率
+	iteration: 往復回数
+	walk_reward: 歩きの報酬
+	eat_self_reward: 自分を咬んだ報酬
+	food_reward: 食物を食べた報酬
+
+`F`を押してビジュアルモードに変え、詳しく各ボロックの価値を見ることができる。
+
+実際に実行してみると、AIが価値の判断により、場所が危険な食物をしばらく放置し、安全になるまで遠回りをして待つ。
+
+このAIはゲーム20回のうちに最高得点が103，平均値は69.2である。（最適パラメータ）
+
+![DP演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/DP_play.gif?raw=true)
+
