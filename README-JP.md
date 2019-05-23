@@ -1,4 +1,4 @@
-# Deep Reinforcement Learning 深度强化学习贪吃蛇游戏 DRL_Snakey
+# Deep Reinforcement Learning 深層強化学習による Gluttonous Snake ゲーム　DRL_Snakey
 
 深層強化学習によるGluttonous Snake(食いしん坊蛇)ゲームAIとゲーム環境
 
