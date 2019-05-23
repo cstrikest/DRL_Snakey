@@ -12,7 +12,7 @@
 ![GitHub release](https://img.shields.io/github/release/cstrikest/DRL_Snakey.svg)
 
 [![Readme](https://img.shields.io/badge/Readme-Chinese-red.svg)](http://github.com/cstrikest/DRL_Snakey)
-[![Readme](https://img.shields.io/badge/Readme-Japanese-orange.svg)](http://github.com/cstrikest/DRL_Snakey/README-JP.md)
+[![Readme](https://img.shields.io/badge/Readme-Japanese-orange.svg)](http://github.com/cstrikest/DRL_Snakey/blob/master/README-JP.md)
 
 
 ![ゲームスタート画面](https://github.com/cstrikest/ML_Snakey/blob/master/images/gamestart_image.png?raw=true)
