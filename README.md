@@ -98,7 +98,7 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
             
 ## DRL_Snakey说明
 
-DRL_Snakey分为游戏环境`DRL_Snakey.core`，智能体`DRL_Snakey.agent`与`DRL_Snakey.utlis`组件三部分组成。
+DRL_Snakey主要分为游戏环境`DRL_Snakey.core`，智能体`DRL_Snakey.agent`与`DRL_Snakey.utlis`组件三部分组成。
 
 其中`DRL_Snakey.core.Game`为贪吃蛇游戏的基本行动规则，死亡判定以及地图查看等功能。可以视为游戏的本体。
 `DRL_Snakey.core.UI`为游戏界面显示相关。通过pygame包来创建可视化的游戏界面。
@@ -121,6 +121,8 @@ Agent类:
 		给不同的agnet预留的自定义函数，用来调试或数据可视化。
 		"""
 		pass
+
+`DRL_Snakey.core.snake`中还有一个`Snake`类来表示游戏中的每条蛇。
 
 ps. 请多多编写自己的agent然后pull request
 

@@ -98,7 +98,7 @@ agentのトレーニングが必要とかUIがいらないときは、以下の�
             
 ## DRL_Snakeyの説明
 
-DRL_Snakeyの3部分は、ゲームの基盤`DRL_Snakey.core`，agent`DRL_Snakey.agent`とツール`DRL_Snakey.utlis`である。
+DRL_Snakeyは主に、ゲームの基盤`DRL_Snakey.core`，agent`DRL_Snakey.agent`とツール`DRL_Snakey.utlis`3部分に分けている。
 
 その中の`DRL_Snakey.core.Game`はゲームの基盤ルールで，デス判定や地図の処理機能があり、ゲームの本体として扱う。
 `DRL_Snakey.core.UI`はUI関連であり、pygameを使って画面を作る。。
@@ -120,6 +120,8 @@ Agentクラス:
 		カスタム関数。
 		"""
 		pass
+
+`DRL_Snakey.core.snake`の中には、`Snake`というクラスでゲームの蛇を表す。
 
 ps. 興味があればどうぞ自分のAgentを書き、そしてpull requestしてお願いしますね。
 
