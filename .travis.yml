@@ -7,4 +7,4 @@ install:
   - pip install h5py
   - pip install pygame
   - pip install matplotlib
-script: python -c "import DRL_Snakey as Snakey"
+script: python CI_test.py
