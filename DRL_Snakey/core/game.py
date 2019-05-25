@@ -3,7 +3,7 @@
 __author__ = "Yxzh"
 
 from random import randint
-from DRL_Snakey.core.Snake import Snake
+from DRL_Snakey.core.snake import Snake
 import numpy as np
 
 
