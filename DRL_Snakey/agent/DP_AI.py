@@ -11,8 +11,7 @@ class DP(Agent):
 	Dynamic Programming 动态规划-马尔科夫决策法
 	通过迭代贝尔曼方程，每一步刷新地图各个点的价值，并且朝着价值最高的点前进。
 	"""
-	
-	def __init__(self, discount = 1, iteration = 20, walk_reward = -1, eat_self_reward = -3, food_reward = 1):
+	def __init__(self, discount = 1, iteration = 20, walk_reward = -1, eat_self_reward = -4, food_reward = 1):
 		"""
 		构造DP智能体类。
 		:param discount: 衰减率，贝尔曼方程中对于非即时回报的衰减率。
@@ -23,43 +22,43 @@ class DP(Agent):
 		"""
 		self.default_visual_mode = True
 		self.discount = discount
-		self.strategy = np.zeros((20, 20))
+		self.values= np.zeros((20, 20))
 		self.iteration = iteration
 		self.walk_reward = walk_reward
 		self.eat_self_reward = eat_self_reward
 		self.food_reward = food_reward
-		self.strategy_max = 0
-		self.strategy_min = 0
+		self.value_max = 0
+		self.value_min = 0
 	
 	def frash_state_value(self, Game):
 		"""
 		进行一次价值矩阵的计算迭代。
 		:param Game: 游戏
 		"""
-		
 		temp_action = ["W", "S", "A", "D"]
-		temp_action.remove(self.get_opposite_direction(Game.direction))  # 排除无效动作，贪吃蛇游戏中是与前进方向相反的动作。
+		temp_action.remove(self.get_opposite_direction(Game.main_snake.direction))  # 排除无效动作，贪吃蛇游戏中是与前进方向相反的动作。
 		for _ in range(0, self.iteration):
-			temp_strategy = np.copy(self.strategy)
+			temp_value = np.copy(self.values)
 			for i in range(0, 20):
 				for j in range(0, 20):
 					temp = 0
 					for a in temp_action:
 						reward = self.walk_reward  # 每走一步默认回报
 						x, y = self.next(a, (i, j))
-						if (x, y) in Game.snakes[: -3]:
+						if (x, y) in Game.main_snake.snakes[: -3]:
 							reward = self.eat_self_reward  # 下一步吃到自己的回报
 						if (x, y) == Game.food_pos:
 							reward = self.food_reward  # 下一步吃到食物的回报
-						temp += 1 / len(temp_action) * (reward + self.discount * self.strategy[x][y])
-					temp_strategy[i][j] = temp
-			temp_strategy[Game.food_pos[0]][Game.food_pos[1]] = 0  # 食物点价值最高
-			self.strategy = temp_strategy
+						temp += 1 / len(temp_action) * (reward + self.discount * self.values[x][y])
+					temp_value[i][j] = temp
+			temp_value[Game.food_pos[0]][Game.food_pos[1]] = 0  # 食物点价值最高
+			self.values = temp_value
 	
-	def custom_function(self, Game):
-		pass
+	def button_K_e_pressed(self, Game):
+		print("Please press 'F' in game switch to visualize mode.")
 	
-	def next(self, direction, pos):
+	@staticmethod
+	def next(direction, pos):
 		"""
 		根据方向返回下一步时点的坐标。
 		:param direction: 方向
@@ -109,7 +108,7 @@ class DP(Agent):
 		:param pos: 坐标
 		:return: 标准化价值
 		"""
-		return (self.strategy[pos] - self.strategy_min) / (self.strategy_max - self.strategy_min)
+		return (self.values[pos] - self.value_min) / (self.value_max - self.value_min)
 	
 	def get_next_direction(self, game):
 		"""
@@ -117,14 +116,14 @@ class DP(Agent):
 		:param game: 游戏
 		:return: 决策方向
 		"""
-		self.strategy = np.zeros((20, 20))
+		self.values = np.zeros((20, 20))
 		self.frash_state_value(game)
 		temp_action = ["W", "S", "A", "D"]
-		temp_action.remove(self.get_opposite_direction(game.direction))
-		value = {}
+		temp_action.remove(self.get_opposite_direction(game.main_snake.direction))
+		strategy = {}
 		for a in temp_action:
-			value[a] = self.strategy[self.next(a, game.head_pos)]
-		optimal_solution = max(value, key = value.get)
-		self.strategy_max = self.strategy.max()
-		self.strategy_min = self.strategy.min()
+			strategy[a] = self.values[self.next(a, game.main_snake.head_pos)]
+		optimal_solution = max(strategy, key = strategy.get)
+		self.value_max = self.values.max()
+		self.value_min = self.values.min()
 		return optimal_solution

@@ -57,25 +57,25 @@ class Logic(Agent):
 		:param game: 游戏
 		:return: 决定的前进方向
 		"""
-		Hs = game.head_pos[0] - game.food_pos[0]  # 横向差值
-		Vs = game.head_pos[1] - game.food_pos[1]  # 纵向差值
+		Hs = game.main_snake.head_pos[0] - game.food_pos[0]  # 横向差值
+		Vs = game.main_snake.head_pos[1] - game.food_pos[1]  # 纵向差值
 		
 		if abs(Hs) > abs(Vs):
 			if Hs < 0:
 				temp = "D"
-				if self.next(temp, game.head_pos) in game.snakes:
-					return self.elude(game.head_pos, game.snakes)[0]
+				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 			else:
 				temp = "A"
-				if self.next(temp, game.head_pos) in game.snakes:
-					return self.elude(game.head_pos, game.snakes)[0]
+				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 		else:
 			if Vs < 0:
 				temp = "S"
-				if self.next(temp, game.head_pos) in game.snakes:
-					return self.elude(game.head_pos, game.snakes)[0]
+				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 			else:
 				temp = "W"
-				if self.next(temp, game.head_pos) in game.snakes:
-					return self.elude(game.head_pos, game.snakes)[0]
+				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 		return temp

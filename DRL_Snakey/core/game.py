@@ -3,6 +3,7 @@
 __author__ = "Yxzh"
 
 from random import randint
+from DRL_Snakey.core.Snake import Snake
 import numpy as np
 
 
@@ -15,10 +16,8 @@ class Game(object):
 		初始化游戏
 		:param bomb: 地图中炸弹数量
 		"""
+		self.main_snake = Snake()
 		self.bomb_number = bomb  # 炸弹个数
-		self.head_pos = [0, 0]  # 蛇头位置
-		self.direction = "S"  # 上一步蛇头方向
-		self.snakes = [(0, 0)] * 2  # 蛇数组
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
 		self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
@@ -30,9 +29,7 @@ class Game(object):
 		"""
 		重置游戏
 		"""
-		self.head_pos = [0, 0]  # 蛇头位置
-		self.direction = "S"  # 上一步蛇头方向
-		self.snakes = [(0, 0)] * 2  # 蛇数组
+		self.main_snake = Snake()
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
 		self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
@@ -47,53 +44,53 @@ class Game(object):
 		:return: 返回详细信息
 		"""
 		
-		if direction == "W" and self.direction != "S":
-			self.direction = "W"
-		if direction == "S" and self.direction != "W":
-			self.direction = "S"
-		if direction == "A" and self.direction != "D":
-			self.direction = "A"
-		if direction == "D" and self.direction != "A":
-			self.direction = "D"
-		if self.direction == "W":
-			self.head_pos[1] -= 1
-		if self.direction == "S":
-			self.head_pos[1] += 1
-		if self.direction == "A":
-			self.head_pos[0] -= 1
-		if self.direction == "D":
-			self.head_pos[0] += 1
-		if self.head_pos[0] < 0:  # 碰到屏幕边缘循环
-			self.head_pos[0] = PLAYGROUND_WIDTH - 1
-		if self.head_pos[0] > PLAYGROUND_WIDTH - 1:
-			self.head_pos[0] = 0
-		if self.head_pos[1] < 0:
-			self.head_pos[1] = PLAYGROUND_HEIGHT - 1
-		if self.head_pos[1] > PLAYGROUND_HEIGHT - 1:
-			self.head_pos[1] = 0
-		del (self.snakes[0])  # 删除蛇数组顶
-		if (self.head_pos[0], self.head_pos[1]) in self.snakes:  # 自身碰撞检测
+		if direction == "W" and self.main_snake.direction != "S":
+			self.main_snake.direction = "W"
+		if direction == "S" and self.main_snake.direction != "W":
+			self.main_snake.direction = "S"
+		if direction == "A" and self.main_snake.direction != "D":
+			self.main_snake.direction = "A"
+		if direction == "D" and self.main_snake.direction != "A":
+			self.main_snake.direction = "D"
+		if self.main_snake.direction == "W":
+			self.main_snake.head_pos[1] -= 1
+		if self.main_snake.direction == "S":
+			self.main_snake.head_pos[1] += 1
+		if self.main_snake.direction == "A":
+			self.main_snake.head_pos[0] -= 1
+		if self.main_snake.direction == "D":
+			self.main_snake.head_pos[0] += 1
+		if self.main_snake.head_pos[0] < 0:  # 碰到屏幕边缘循环
+			self.main_snake.head_pos[0] = PLAYGROUND_WIDTH - 1
+		if self.main_snake.head_pos[0] > PLAYGROUND_WIDTH - 1:
+			self.main_snake.head_pos[0] = 0
+		if self.main_snake.head_pos[1] < 0:
+			self.main_snake.head_pos[1] = PLAYGROUND_HEIGHT - 1
+		if self.main_snake.head_pos[1] > PLAYGROUND_HEIGHT - 1:
+			self.main_snake.head_pos[1] = 0
+		del (self.main_snake.snakes[0])  # 删除蛇数组顶
+		if (self.main_snake.head_pos[0], self.main_snake.head_pos[1]) in self.main_snake.snakes:  # 自身碰撞检测
 			self.deathflag = True  # 触发死亡判定
-		self.snakes.append((self.head_pos[0], self.head_pos[1]))  # 推入蛇数组底
+		self.main_snake.snakes.append((self.main_snake.head_pos[0], self.main_snake.head_pos[1]))  # 推入蛇数组底
 		while len(self.bombs) < self.bomb_number:  # 刷新炸弹
 			bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
-			while (bomb_pos in self.snakes) or (self.food_pos[0] == bomb_pos[0] and self.food_pos[1] == bomb_pos[1]) or (
+			while (bomb_pos in self.main_snake.snakes) or (self.food_pos[0] == bomb_pos[0] and self.food_pos[1] == bomb_pos[1]) or (
 							  bomb_pos in self.bombs):  # 避免与蛇和食物和其他炸弹重叠刷新
 				bomb_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			self.bombs.append(bomb_pos)
-		if (self.head_pos[0], self.head_pos[1]) == self.food_pos:  # 吃食物事件
-			self.snakes.append((self.head_pos[0], self.head_pos[1]))  # 将当前位置推入蛇数组
+		if (self.main_snake.head_pos[0], self.main_snake.head_pos[1]) == self.food_pos:  # 吃食物事件
+			self.main_snake.snakes.append((self.main_snake.head_pos[0], self.main_snake.head_pos[1]))  # 将当前位置推入蛇数组
 			self.ate += 1
 			self.isfood = False
 		if not self.isfood:  # 根据食物判定刷新食物
 			self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
-			while self.food_pos in self.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
+			while self.food_pos in self.main_snake.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
 				self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
 				                 randint(0, PLAYGROUND_HEIGHT - 1))
 			self.isfood = True
-		if (self.head_pos[0], self.head_pos[1]) in self.bombs:  # 炸弹碰撞检测
+		if (self.main_snake.head_pos[0], self.main_snake.head_pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deathflag = True
-		return self.snakes, self.head_pos, self.food_pos, self.bombs, self.ate
+		return self.main_snake.snakes, self.main_snake.head_pos, self.food_pos, self.bombs, self.ate
 	
 	def get_map(self, flat = False):
 		"""
@@ -103,11 +100,11 @@ class Game(object):
 		"""
 		
 		game_map = np.zeros((20, 20))
-		for S in self.snakes:
+		for S in self.main_snake.snakes:
 			game_map[S] = 1
 		for B in self.bombs:
 			game_map[B] = 3
-		if self.head_pos == self.food_pos:
+		if self.main_snake.head_pos == self.food_pos:
 			game_map[self.food_pos] = -1
 		else:
 			game_map[self.food_pos] = 2

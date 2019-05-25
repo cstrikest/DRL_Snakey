@@ -12,7 +12,7 @@ class Agent(object):
 		"""
 		pass
 	
-	def custom_function(self, Game):
+	def button_K_e_pressed(self, Game):
 		"""
 		给不同的agnet预留的自定义函数，用来调试或数据可视化。
 		"""

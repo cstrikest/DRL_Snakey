@@ -56,7 +56,6 @@ class UI(object):
 		self.sf_small_arial_current_fps = f_small_arial.render("fps: ", 1, THECOLORS["black"])
 		self.sf_small_arial_ate = f_small_arial.render("ate: ", 1, THECOLORS["black"])
 		self.sf_small_arial_position = f_small_arial.render("pos: ", 1, THECOLORS["black"])
-		self.sf_small_arial_botton = f_small_arial.render("btnreg: ", 1, THECOLORS["black"])
 		self.sf_small_arial_direction = f_small_arial.render("direction: ", 1, THECOLORS["black"])
 		self.sf_small_arial_dot = f_small_arial.render(".", 1, THECOLORS["black"])
 		self.Lsf_small_arial_direction = {
@@ -91,7 +90,7 @@ class UI(object):
 					pygame.quit()
 					sys.exit()
 				if event.type == KEYDOWN and event.key == K_e:
-					agent.custom_function(game)
+					agent.button_K_e_pressed(game)
 				if event.type == KEYDOWN and event.key == K_f:
 					if self.visual_mode:
 						self.s_screen = pygame.display.set_mode(
@@ -117,7 +116,7 @@ class UI(object):
 			self.s_screen.blit(self.si_food, (game.food_pos[0] * 10 - 4, game.food_pos[1] * 10 - 5))  # 填充食物图片
 			for i in game.bombs:  # 填充炸弹图片
 				self.s_screen.blit(self.si_bomb, [x * 10 - 2 for x in i])
-			for i in game.snakes:  # 填充蛇图片
+			for i in game.main_snake.snakes:  # 填充蛇图片
 				self.s_screen.blit(self.si_snake, [x * 10 for x in i])
 			if game.deathflag:  # 死亡判定
 				self.f_gameover(game.ate)  # 游戏结束画面
@@ -128,16 +127,14 @@ class UI(object):
 			self.s_infoarea.blit(self.sf_small_arial_ate, (10, 20))  # 食物数量信息
 			self.s_infoarea.blit(self.sf_small_arial_position, (10, 35))  # 位置信息
 			self.s_infoarea.blit(self.sf_small_arial_direction, (10, 65))  # 方向信息
-			self.s_infoarea.blit(self.sf_small_arial_botton, (10, 80))  # 按键寄存信息 （实时刷新）
 			self.s_infoarea.blit(self.sf_small_arial_current_fps, (10, 95))  # FPS（实时刷新）
 			self.s_infoarea.blit(self.sf_small_arial_dot, (65, 5))
 			self.f_show_number(self.s_infoarea, game.ate, (65, 20))
-			self.f_show_number(self.s_infoarea, game.head_pos[0], (65, 35))
-			self.f_show_number(self.s_infoarea, game.head_pos[1], (65, 50))
+			self.f_show_number(self.s_infoarea, game.main_snake.head_pos[0], (65, 35))
+			self.f_show_number(self.s_infoarea, game.main_snake.head_pos[1], (65, 50))
 			current_fps = self.fps_clock.get_fps()  # 获取实时FPS
 			self.f_show_number(self.s_infoarea, current_fps, (65, 95))  # 填充FPS
-			self.s_infoarea.blit(self.Lsf_small_arial_direction[game.direction], (65, 65))
-			self.s_infoarea.blit(self.Lsf_small_arial_direction[game.direction], (65, 80))  # 填充按键寄存
+			self.s_infoarea.blit(self.Lsf_small_arial_direction[game.main_snake.direction], (65, 65))
 			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 将实时填充后的信息Surface填充至屏幕Surface
 			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
 			self.fps_clock.tick(self.fps)  # FPS等待时钟
@@ -184,7 +181,6 @@ class UI(object):
 		游戏结束画面
 		:param ate: 食物计数
 		"""
-		
 		fi_score = open("score.s", "a+")  # 将分数写入分数文件 不存在就新建
 		fi_score.write(str(ate) + "\n")
 		fi_score.close()  # 关闭文件IO流
@@ -211,7 +207,6 @@ class UI(object):
 		"""
 		计分板画面
 		"""
-		
 		fi_score = open("score.s", "r")  # 读取分数文件
 		scores = []
 		for i in fi_score.readlines():  # 转换为int
