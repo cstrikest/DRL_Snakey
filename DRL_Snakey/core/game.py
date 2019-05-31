@@ -4,6 +4,7 @@ __author__ = "Yxzh"
 
 from random import randint
 from DRL_Snakey.core.snake import Snake
+from DRL_Snakey.utils import *
 import numpy as np
 
 
@@ -11,12 +12,12 @@ PLAYGROUND_WIDTH = 20
 PLAYGROUND_HEIGHT = 20  # 游戏区域大小
 
 class Game(object):
-	def __init__(self, bomb = 0):
+	def __init__(self, bomb = 0, snake = Snake()):
 		"""
 		初始化游戏
 		:param bomb: 地图中炸弹数量
 		"""
-		self.main_snake = Snake()
+		self.main_snake = snake
 		self.bomb_number = bomb  # 炸弹个数
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
@@ -37,28 +38,29 @@ class Game(object):
 		self.ate = 0  # 食物计数
 		self.deathflag = False  # 死亡判定
 	
-	def next(self, direction):
+	def next_step(self, direction):
 		"""
 		游戏进行一步
-		:param direction: 每一步的方向
+	=	:param direction: 每一步的方向
 		:return: 返回详细信息
 		"""
 		
-		if direction == "W" and self.main_snake.direction != "S":
-			self.main_snake.direction = "W"
-		if direction == "S" and self.main_snake.direction != "W":
-			self.main_snake.direction = "S"
-		if direction == "A" and self.main_snake.direction != "D":
-			self.main_snake.direction = "A"
-		if direction == "D" and self.main_snake.direction != "A":
-			self.main_snake.direction = "D"
-		if self.main_snake.direction == "W":
+		is_ate = False
+		if direction == DIRECTIONS[0] and self.main_snake.direction != DIRECTIONS[1]:
+			self.main_snake.direction = DIRECTIONS[0]
+		if direction == DIRECTIONS[1] and self.main_snake.direction != DIRECTIONS[0]:
+			self.main_snake.direction = DIRECTIONS[1]
+		if direction == DIRECTIONS[2] and self.main_snake.direction != DIRECTIONS[3]:
+			self.main_snake.direction = DIRECTIONS[2]
+		if direction == DIRECTIONS[3] and self.main_snake.direction != DIRECTIONS[2]:
+			self.main_snake.direction = DIRECTIONS[3]
+		if self.main_snake.direction == DIRECTIONS[0]:
 			self.main_snake.head_pos[1] -= 1
-		if self.main_snake.direction == "S":
+		if self.main_snake.direction == DIRECTIONS[1]:
 			self.main_snake.head_pos[1] += 1
-		if self.main_snake.direction == "A":
+		if self.main_snake.direction == DIRECTIONS[2]:
 			self.main_snake.head_pos[0] -= 1
-		if self.main_snake.direction == "D":
+		if self.main_snake.direction == DIRECTIONS[3]:
 			self.main_snake.head_pos[0] += 1
 		if self.main_snake.head_pos[0] < 0:  # 碰到屏幕边缘循环
 			self.main_snake.head_pos[0] = PLAYGROUND_WIDTH - 1
@@ -82,6 +84,7 @@ class Game(object):
 			self.main_snake.snakes.append((self.main_snake.head_pos[0], self.main_snake.head_pos[1]))  # 将当前位置推入蛇数组
 			self.ate += 1
 			self.isfood = False
+			is_ate = True
 		if not self.isfood:  # 根据食物判定刷新食物
 			self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			while self.food_pos in self.main_snake.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
@@ -90,7 +93,7 @@ class Game(object):
 			self.isfood = True
 		if (self.main_snake.head_pos[0], self.main_snake.head_pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deathflag = True
-		return self.main_snake.snakes, self.main_snake.head_pos, self.food_pos, self.bombs, self.ate
+		return is_ate
 	
 	def get_map(self, flat = False):
 		"""

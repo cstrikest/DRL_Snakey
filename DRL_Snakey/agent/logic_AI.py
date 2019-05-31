@@ -3,43 +3,20 @@
 __author__ = "Yxzh"
 
 import random
+from DRL_Snakey.utils import *
 from DRL_Snakey.agent import Agent
 
 
 class Logic(Agent):
-	@staticmethod
-	def next(direction, pos):  # 预测下一步位置
-		x = pos[0]
-		y = pos[1]
-		PLAYGROUND_WIDTH = 20
-		PLAYGROUND_HEIGHT = 20  # 游戏区域大小
-		if direction == "W":
-			y -= 1
-		if direction == "S":
-			y += 1
-		if direction == "A":
-			x -= 1
-		if direction == "D":
-			x += 1
-		if x < 0:
-			x = PLAYGROUND_WIDTH - 1
-		if x > PLAYGROUND_WIDTH - 1:
-			x = 0
-		if y < 0:
-			y = PLAYGROUND_HEIGHT - 1
-		if y > PLAYGROUND_HEIGHT - 1:
-			y = 0
-		return x, y
-	
 	def elude(self, pos, snakes):  # 躲避
-		l = ["W", "S", "A", "D"]
-		if self.next(l[0], pos) not in snakes:
+		l = list(DIRECTIONS)
+		if predict_next_position(l[0], pos) not in snakes:
 			temp = l[0]
-		elif self.next(l[1], pos) not in snakes:
+		elif predict_next_position(l[1], pos) not in snakes:
 			temp = l[1]
-		elif self.next(l[2], pos) not in snakes:
+		elif predict_next_position(l[2], pos) not in snakes:
 			temp = l[2]
-		elif self.next(l[3], pos) not in snakes:
+		elif predict_next_position(l[3], pos) not in snakes:
 			temp = l[3]
 		else:
 			temp = l[random.randrange(0, 4)]
@@ -62,20 +39,20 @@ class Logic(Agent):
 		
 		if abs(Hs) > abs(Vs):
 			if Hs < 0:
-				temp = "D"
-				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+				temp = DIRECTIONS[3]
+				if predict_next_position(temp, game.main_snake.head_pos) in game.main_snake.snakes:
 					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 			else:
-				temp = "A"
-				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+				temp = DIRECTIONS[2]
+				if predict_next_position(temp, game.main_snake.head_pos) in game.main_snake.snakes:
 					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 		else:
 			if Vs < 0:
-				temp = "S"
-				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+				temp = DIRECTIONS[1]
+				if predict_next_position(temp, game.main_snake.head_pos) in game.main_snake.snakes:
 					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 			else:
-				temp = "W"
-				if self.next(temp, game.main_snake.head_pos) in game.main_snake.snakes:
+				temp = DIRECTIONS[0]
+				if predict_next_position(temp, game.main_snake.head_pos) in game.main_snake.snakes:
 					return self.elude(game.main_snake.head_pos, game.main_snake.snakes)[0]
 		return temp

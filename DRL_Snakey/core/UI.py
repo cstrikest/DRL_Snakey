@@ -6,6 +6,7 @@ import pygame
 import sys
 from pygame.locals import *
 from pygame.color import THECOLORS
+from DRL_Snakey.utils import *
 import pygame.font
 
 path = __file__.replace("core/UI.py", "")
@@ -59,10 +60,10 @@ class UI(object):
 		self.sf_small_arial_direction = f_small_arial.render("direction: ", 1, THECOLORS["black"])
 		self.sf_small_arial_dot = f_small_arial.render(".", 1, THECOLORS["black"])
 		self.Lsf_small_arial_direction = {
-			"W": f_small_arial.render("W", 1, THECOLORS["black"]),
-			"S": f_small_arial.render("S", 1, THECOLORS["black"]),
-			"A": f_small_arial.render("A", 1, THECOLORS["black"]),
-			"D": f_small_arial.render("D", 1, THECOLORS["black"]),
+			DIRECTIONS[0]: f_small_arial.render("W", 1, THECOLORS["black"]),
+			DIRECTIONS[1]: f_small_arial.render("S", 1, THECOLORS["black"]),
+			DIRECTIONS[2]: f_small_arial.render("A", 1, THECOLORS["black"]),
+			DIRECTIONS[3]: f_small_arial.render("D", 1, THECOLORS["black"]),
 		}
 		self.Lsf_small_arial_numbers_black = []
 		for i in range(0, 10):
@@ -106,7 +107,7 @@ class UI(object):
 				if event.type == KEYDOWN and event.key == K_p:
 					self.pause()
 			self.s_screen.fill(THECOLORS["white"])  # 填充白屏
-			game.next(agent.get_next_direction(game))  # 获取下一步方向
+			game.next_step(agent.get_next_direction(game))  # 获取下一步方向
 			if self.visual_mode:  # 可视化模式
 				for i in range(0, 20):
 					for j in range(0, 20):

@@ -3,3 +3,5 @@
 __author__ = "Yxzh"
 
 from .training import Train
+from .functions import *
+from .directions import *
