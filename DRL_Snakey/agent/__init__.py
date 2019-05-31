@@ -27,3 +27,4 @@ class Agent(object):
 from .logic_AI import Logic
 from .DP_AI import DP
 from .MC_AI import MC
+from .Stupid_AI import StupidAgent
