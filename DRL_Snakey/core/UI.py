@@ -58,6 +58,7 @@ class UI(object):
 		self.sf_small_arial_ate = f_small_arial.render("ate: ", 1, THECOLORS["black"])
 		self.sf_small_arial_position = f_small_arial.render("pos: ", 1, THECOLORS["black"])
 		self.sf_small_arial_direction = f_small_arial.render("direction: ", 1, THECOLORS["black"])
+		self.sf_small_arial_step = f_small_arial.render("step: ", 1, THECOLORS["black"])
 		self.sf_small_arial_dot = f_small_arial.render(".", 1, THECOLORS["black"])
 		self.Lsf_small_arial_direction = {
 			DIRECTIONS[0]: f_small_arial.render("W", 1, THECOLORS["black"]),
@@ -128,13 +129,15 @@ class UI(object):
 			self.s_infoarea.blit(self.sf_small_arial_ate, (10, 20))  # 食物数量信息
 			self.s_infoarea.blit(self.sf_small_arial_position, (10, 35))  # 位置信息
 			self.s_infoarea.blit(self.sf_small_arial_direction, (10, 65))  # 方向信息
+			self.s_infoarea.blit(self.sf_small_arial_step, (10, 80))  # 步数
 			self.s_infoarea.blit(self.sf_small_arial_current_fps, (10, 95))  # FPS（实时刷新）
 			self.s_infoarea.blit(self.sf_small_arial_dot, (65, 5))
-			self.f_show_number(self.s_infoarea, game.ate, (65, 20))
-			self.f_show_number(self.s_infoarea, game.main_snake.head_pos[0], (65, 35))
-			self.f_show_number(self.s_infoarea, game.main_snake.head_pos[1], (65, 50))
+			self.f_show_number(self.s_infoarea, game.ate, (65, 20), 4)
+			self.f_show_number(self.s_infoarea, game.main_snake.head_pos[0], (65, 35), 2)
+			self.f_show_number(self.s_infoarea, game.main_snake.head_pos[1], (65, 50), 2)
+			self.f_show_number(self.s_infoarea, game.step, (65, 80), 4)
 			current_fps = self.fps_clock.get_fps()  # 获取实时FPS
-			self.f_show_number(self.s_infoarea, current_fps, (65, 95))  # 填充FPS
+			self.f_show_number(self.s_infoarea, current_fps, (65, 95), 4)  # 填充FPS
 			self.s_infoarea.blit(self.Lsf_small_arial_direction[game.main_snake.direction], (65, 65))
 			self.s_screen.blit(self.s_infoarea, (self.PLAYGROUND_WIDTH * 10, 0))  # 将实时填充后的信息Surface填充至屏幕Surface
 			pygame.display.flip()  # 将图像内存缓冲刷新至屏幕
@@ -142,17 +145,22 @@ class UI(object):
 			if self.is_pause:
 				self.pause()
 	
-	def f_show_number(self, surface, number, position):
+	def f_show_number(self, surface, number, position, digit):
 		"""
 		在目标Surface上填充数字
 		:param surface: 目标Surface
 		:param number: 数字
 		:param position: 位置
+		:param digit: 显示数字位数
 		"""
-		
-		surface.blit(self.Lsf_small_arial_numbers_black[int(number / 100)], (position[0], position[1]))
-		surface.blit(self.Lsf_small_arial_numbers_black[int((number % 100) / 10)], (position[0] + 7, position[1]))
-		surface.blit(self.Lsf_small_arial_numbers_black[int((number % 100) % 10)], (position[0] + 14, position[1]))
+		if digit > 0:
+			surface.blit(self.Lsf_small_arial_numbers_black[int(number / 1000)], position)
+			if digit > 1:
+				surface.blit(self.Lsf_small_arial_numbers_black[int((number % 1000) / 100)], (position[0] + 7, position[1]))
+				if digit > 2:
+					surface.blit(self.Lsf_small_arial_numbers_black[int(((number % 1000) % 100) / 10)], (position[0] + 14, position[1]))
+					if digit > 3:
+						surface.blit(self.Lsf_small_arial_numbers_black[int(((number % 1000) % 100) % 10)], (position[0] + 21, position[1]))
 		return
 	
 	def start(self):
@@ -200,7 +208,7 @@ class UI(object):
 			self.s_screen.blit(self.sf_small_arial_restart, (92, 50))
 			self.s_screen.blit(self.sf_small_arial_scoreboard, (62, 65))
 			self.s_screen.blit(self.si_deadsnake, (80, 75))
-			self.f_show_number(self.s_screen, ate, (150, 35))  # 填充该局得分
+			self.f_show_number(self.s_screen, ate, (150, 35), 4)  # 填充该局得分
 			pygame.display.flip()
 			self.fps_clock.tick(5)
 	
@@ -227,7 +235,7 @@ class UI(object):
 			for i in range(0, len(scores)):  # 填充排行榜
 				self.s_screen.blit(self.Lsf_small_arial_numbers_black[i + 1], (130, 60 + 15 * i))
 				self.s_screen.blit(self.sf_small_arial_dot, (137, 60 + 15 * i))
-				self.f_show_number(self.s_screen, scores[i], (150, 60 + 15 * i))
+				self.f_show_number(self.s_screen, scores[i], (150, 60 + 15 * i), 3)
 				if i > 7:
 					break
 			pygame.display.flip()

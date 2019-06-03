@@ -11,18 +11,19 @@ from DRL_Snakey.utils import *
 from random import randint
 from random import random
 
+
 class MC(Agent):
 	"""
 	蒙特卡洛法，基于大量随机实验，决策前进方向。
 	"""
 	
 	def __init__(self, discount = 0.95,
-	             iteration = 30,
-	             max_step = 500,
+	             iteration = 60,
+	             max_step = 1000,
 	             walk_reward = -1,
-	             eat_self_reward = -20,
-	             food_reward = 40,
-	             epsilon = 0.3):
+	             eat_self_reward = -60,
+	             food_reward = 80,
+	             epsilon = 0.03):
 		self.default_visual_mode = False
 		self.discount = discount
 		self.iteration = iteration
@@ -43,11 +44,13 @@ class MC(Agent):
 		for each_first_direction in passible_direction:  # 建立字典
 			direction_set[each_first_direction] = 0
 			iteration_set[each_first_direction] = 1
+		attempt_game = Game_model(0)
 		for _ in range(0, self.iteration - 1):  # 开始随机尝试
-			attempt_game = Game_model(bomb = 0,
-			                          snake = Snake(list(Game.main_snake.head_pos),
-			                                        list(Game.main_snake.snakes),
-			                                        Game.main_snake.direction))
+			attempt_game.reset(bomb = 0,
+			                   snake = Snake(list(Game.main_snake.head_pos),
+			                                 list(Game.main_snake.snakes),
+			                                 Game.main_snake.direction))
+			attempt_game.food_pos = Game.food_pos
 			first_direction = passible_direction[randint(0, 2)]
 			if attempt_game.next_step(first_direction):
 				direction_set[first_direction] += self.food_reward
@@ -70,14 +73,15 @@ class MC(Agent):
 				elif attempt_game.deathflag:
 					direction_set[first_direction] += math.pow(self.discount, power_of_discount) * self.eat_self_reward
 					break
-				elif power_of_discount > self.max_step:
-					break
+				# elif power_of_discount > self.max_step:
+				# 	break
 				else:
 					direction_set[first_direction] += math.pow(self.discount, power_of_discount) * self.walk_reward
 			iteration_set[first_direction] += 1
 		for i in range(0, 3):
 			direction_set[passible_direction[i]] = direction_set[passible_direction[i]] / iteration_set[
 				passible_direction[i]]
+		print(direction_set)
 		return max(direction_set, key = direction_set.get)
 	
 	def visual_mode(self, Game, pos):

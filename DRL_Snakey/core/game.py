@@ -25,24 +25,27 @@ class Game(object):
 		                 randint(0, PLAYGROUND_HEIGHT - 1))  # 食物坐标
 		self.ate = 0  # 食物计数
 		self.deathflag = False  # 死亡判定
+		self.step = 0
 	
-	def reset(self):
+	def reset(self, bomb = 0, snake = Snake()):
 		"""
 		重置游戏
 		"""
-		self.main_snake = Snake()
+		self.main_snake = snake
+		self.bomb_number = bomb
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组
 		self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1),
 		                 randint(0, PLAYGROUND_HEIGHT - 1))  # 食物坐标
 		self.ate = 0  # 食物计数
 		self.deathflag = False  # 死亡判定
+		self.step = 0
 	
 	def next_step(self, direction):
 		"""
 		游戏进行一步
 	=	:param direction: 每一步的方向
-		:return: 返回详细信息
+		:return: 是否吃到食物
 		"""
 		
 		is_ate = False
@@ -93,6 +96,9 @@ class Game(object):
 			self.isfood = True
 		if (self.main_snake.head_pos[0], self.main_snake.head_pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deathflag = True
+		self.step += 1
+		if self.step > 10000:
+			self.step = 0
 		return is_ate
 	
 	def get_map(self, flat = False):
