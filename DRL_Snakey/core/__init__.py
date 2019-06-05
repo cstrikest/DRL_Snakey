@@ -4,3 +4,4 @@ __author__ = "Yxzh"
 
 from .game import Game
 from .UI import UI
+from .snake import Snake

@@ -33,7 +33,8 @@ Pythonバージョン: Python3.6または以上のバージョン
 
 **デモスクリプト: Snakey_play.py**
 
-このスクリプトはDRL_Snakeyパッケージと関係なく、AI部分は含まれていない人間が遊べるゲームのデモスクリプトである。
+このスクリプトはDRL_Snakeyパッケージと関係なく、AI部分は含まれていない人間が遊べるゲー
+ムのデモスクリプトである。
 
 パッケージを使用する前にこのスクリプトを実行してみよう。
 
@@ -41,21 +42,29 @@ Pythonバージョン: Python3.6または以上のバージョン
 
 ### ゲームのルール
 
-基本的には蛇をコントロールして食べ物を食べながら自分を咬まないようにゲームを進む。食物を食べると蛇自分の長さも伸びるので難易度がどんどん増えでいく。一応ボムのルールが入っているが、普通はボムなしにする。
+基本的には蛇をコントロールして食べ物を食べながら自分を咬まないようにゲームを進む。食物を
+食べると蛇自分の長さも伸びるので難易度がどんどん増えでいく。一応ボムのルールが入っている
+が、普通はボムなしにする。
 
-人間プレーヤーがゲームを遊ぶとき、スピードレベルがあり、食物を5個食べると蛇のスピードが上がる。
+人間プレーヤーがゲームを遊ぶとき、スピードレベルがあり、食物を5個食べると蛇のスピードが
+上がる。
 
-ゲームは大きさ200×200ピクセル平面に行い、10×10ピクセルごとにブロックとして表す。ゲーム画面の右側はディテールエリアである。
+ゲームは大きさ200×200ピクセル平面に行い、10×10ピクセルごとにブロックとして表す。ゲーム
+画面の右側はディテールエリアである。
 
-方向キーで蛇をコントロールすることができ、いつでも`Q`を押してゲームを閉じられる。ゲーム中にで`P`は一時停止、そして`N`はステッピングモードに変え、`F`はビジュアルモードに変える。
+方向キーで蛇をコントロールすることができ、いつでも`Q`を押してゲームを閉じられる。ゲーム
+中にで`P`は一時停止、そして`N`はステッピングモードに変え、`F`はビジュアルモードに変える。
 
-ゲームオーバーするとゲームオーバー画面に入り、`R`を押すとゲームをやり直す。`S`はスコアボード。
+ゲームオーバーするとゲームオーバー画面に入り、`R`を押すとゲームをやり直す。`S`はスコア
+ボード。
 
 ### AI部分の説明
 
-AIにはゲームのスピードやレベルが意味なし、そしてゲームUIのFPS値より一番速いスピードで実行する。（だが計算が思い場合FPSに達せないという状況もよくでる。）
+AIにはゲームのスピードやレベルが意味なし、そしてゲームUIのFPS値より一番速いスピードで実
+行する。（だが計算が思い場合FPSに達せないという状況もよくでる。）
 
-デモスクリプトを除き、ゲームは主に**ゲームルール**、**UIエンジン**、**エージェント**3部分で構成され、UIがなくてもゲームを実行することができる。
+デモスクリプトを除き、ゲームは主に**ゲームルール**、**UIエンジン**、**エージェント**
+3部分で構成され、UIがなくてもゲームを実行することができる。
 
 本プロジェクトの中にいくつのAIスクリプトがあり、また以下に説明する。
 
@@ -69,7 +78,7 @@ AIにはゲームのスピードやレベルが意味なし、そしてゲーム
     
 ゲームオブジェクトを宣言する。このクラスはゲームルールだけが入っている。(DRL_Snakey.Game)。
 
-    game = Snakey.Game(bomb = 0)
+    game = Snakey.Game()
     
 ゲームをコントロールするagentオブジェクト。ここで簡単なロジックaengtお使って例を挙げる。
 
@@ -77,7 +86,7 @@ AIにはゲームのスピードやレベルが意味なし、そしてゲーム
     
 pygameを使うゲームUIオブジェクト。
     
-    ui = Snakey.UI(fps = 60)
+    ui = Snakey.UI()
     
 UIクラスのshow(game, agent)関数でゲーム画面を起動する。
 
@@ -87,25 +96,29 @@ agentのトレーニングが必要とかUIがいらないときは、以下の�
 
     import DRL_Snakey as Snakey
     
-    game = Snakey.Game(bomb = 0)
+    
+    game = Snakey.Game()
     agent = Snakey.agent.Logic()
     
     while True:
-        game.next(agent.get_next_direction(game))
+        game.next_step(agent.get_next_direction(game))
         if game.deathflag:
             print("Gameover. score:", game.ate)
             game.reset()
             
 ## DRL_Snakeyの説明
 
-DRL_Snakeyは主に、ゲームの基盤`DRL_Snakey.core`，agent`DRL_Snakey.agent`とツール`DRL_Snakey.utlis`3部分に分けている。
+DRL_Snakeyは主に、ゲームの基盤`DRL_Snakey.core`，agent`DRL_Snakey.agent`とツール
+`DRL_Snakey.utlis`3部分に分けている。
 
-その中の`DRL_Snakey.core.Game`はゲームの基盤ルールで，デス判定や地図の処理機能があり、ゲームの本体として扱う。
+その中の`DRL_Snakey.core.Game`はゲームの基盤ルールで，デス判定や地図の処理機能があ
+り、ゲームの本体として扱う。
 `DRL_Snakey.core.UI`はUI関連であり、pygameを使って画面を作る。。
 
-`DRL_Snakey.agent`は知能体agnet部分である。Agentがゲームの状態を読み込み、そしてそれに対応する蛇の向きを決定する。（普通なアルゴリズムまたはニューラルネットワークなど）
+`DRL_Snakey.agent`は知能体agnet部分である、中には幾つのAIクラスがある。Agentが
+ゲームの状態を読み込み、そしてそれに対応する蛇の向きを決定する。
 
-Agentクラス:
+Agentクラスのストラクチャー:
 
     class Agent(object):
 	def get_next_direction(self, Game):
@@ -125,7 +138,7 @@ Agentクラス:
 
 ps. 興味があればどうぞ自分のAgentを書き、そしてpull requestしてお願いしますね。
 
-### DRL_Snakey.Agent.Logic
+### DRL_Snakey.agent.Logic_AI.Logic
 
 簡単なデモンストレーション用Agentで、ボムを完全に無視して食物だけ狙っていくアルゴリズムである。
 
@@ -133,27 +146,50 @@ ps. 興味があればどうぞ自分のAgentを書き、そしてpull request�
 
 このAIはゲーム20回のうちに最高得点が68，平均値は49.6である。
 
-![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/2.gif?raw=true)
+![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/Logic_play.gif?raw=true)
 
-### DRL_Snakey.Agent.DP
+### DRL_Snakey.agent.DP_AI.DP
 
 DP(Dynamic Programming)マルコフ決定過程-動的計画法。
 
-ベルマン最適方程式を使って方策往復を行い、地図の中の各ボロックの価値を計算する。そして周りの一番価値高いボロックにいく。
+ベルマン最適方程式を使って方策往復を行い、地図の中の各ボロックの価値を計算する。そして
+周りの一番価値高いボロックにいく。
 
 コンストラクタパラメータの説明:
 
-    discount: 減衰率
-	iteration: 往復回数
-	walk_reward: 歩きの報酬
-	eat_self_reward: 自分を咬んだ報酬
-	food_reward: 食物を食べた報酬
+* `discount`: 減衰率
+* `iteration`: 往復回数
+* `walk_reward`: 歩きの報酬
+* `eat_self_reward`: 自分を咬んだ報酬
+* `food_reward`: 食物を食べた報酬
 
 `F`を押してビジュアルモードに変え、詳しく各ボロックの価値を見ることができる。
 
-実際に実行してみると、AIが価値の判断により、場所が危険な食物をしばらく放置し、安全になるまで遠回りをして待つ。
+実際に実行してみると、AIが価値の判断により、場所が危険な食物をしばらく放置し、安全になる
+まで遠回りをして待つ。
 
-このAIはゲーム20回のうちに最高得点が103，平均値は69.2である。（最適パラメータ）
+このAIはゲーム20回のうちに最高得点が119，平均値は69.2である。（最適パラメータ）
 
 ![DP演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/DP_play.gif?raw=true)
 
+### DRL_Snakey.agent.MC_AI.MC
+
+MC(Monte-Calo)モンテカルロ法。
+
+毎回歩くときある方策により三つの可能か方向の平均動作価値を計算し、そのうちの
+一番価値高い方向を選択して歩く。本AIが使用されている基本方策は`DRL_Snakey.agent.Logic_AI.Logic`
+である。
+
+コンストラクタパラメータの説明:
+
+* `discount`: 減衰率
+* `iteration`: 往復回数
+* `max_step`: 予測最大歩き回数
+* `epsilon`: 探索率
+* `walk_reward`: 歩きの報酬
+* `eat_self_reward`: 自分を咬んだ報酬
+* `food_reward`: 食物を食べた報酬
+
+このAIはゲーム20回のうちに最高得点が89，平均値は50.5である。
+
+![MC演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/MC_play.gif?raw=true)

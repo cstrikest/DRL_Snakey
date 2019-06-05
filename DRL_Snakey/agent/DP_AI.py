@@ -54,6 +54,7 @@ class DP(Agent):
 					temp_value[i][j] = temp
 			temp_value[Game.food_pos[0]][Game.food_pos[1]] = 0  # 食物点价值最高
 			self.values = temp_value
+			
 	
 	def button_K_e_pressed(self, Game):
 		print("Please press 'F' in game switch to visualize mode.")

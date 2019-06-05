@@ -57,7 +57,7 @@ Python版本: Python3.6或以上
 
 AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使用界面时默认使用最快的刷新速度。
 
-本项目内拥有数个AI逻辑脚本，详细见下文的各脚本说明。
+本项目内拥有数个AI脚本，详细见下文的各脚本说明。
 
 **游戏中按F键可切换可视化部分，P键暂停，N键在暂停时单步进行游戏。**
 
@@ -69,7 +69,7 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
     
 创建游戏对象，此游戏类仅包含游戏规则(DRL_Snakey.Game)。
 
-    game = Snakey.Game(bomb = 0)
+    game = Snakey.Game()
     
 游戏控制agent对象。这里以简单逻辑算法AI举例。
 
@@ -77,7 +77,7 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
     
 游戏界面对象，通过pygame模块创建可视的游戏界面。
     
-    ui = Snakey.UI(fps = 60)
+    ui = Snakey.UI()
     
 通过UI类的show(game, agent)函数创建游戏窗口。
 
@@ -87,11 +87,12 @@ AI没有游戏的速度区别与等级区分，暂时无视炸弹，并且在使
 
     import DRL_Snakey as Snakey
     
-    game = Snakey.Game(bomb = 0)
+    
+    game = Snakey.Game()
     agent = Snakey.agent.Logic()
     
     while True:
-        game.next(agent.get_next_direction(game))
+        game.next_step(agent.get_next_direction(game))
         if game.deathflag:
             print("Gameover. score:", game.ate)
             game.reset()
@@ -103,10 +104,10 @@ DRL_Snakey主要分为游戏环境`DRL_Snakey.core`，智能体`DRL_Snakey.agent
 其中`DRL_Snakey.core.Game`为贪吃蛇游戏的基本行动规则，死亡判定以及地图查看等功能。可以视为游戏的本体。
 `DRL_Snakey.core.UI`为游戏界面显示相关。通过pygame包来创建可视化的游戏界面。
 
-`DRL_Snakey.agent`为智能体部分。智能体会读取游戏中每步的状态，应用相对的决策方法（普通算法或神经网络等等）
+`DRL_Snakey.agent`为智能体部分，其中拥有众多AI类。智能体会读取游戏中每步的状态，应用相对的决策方法
 进行决策，并给出反应。
 
-Agent类:
+Agent类的结构:
 
     class Agent(object):
 	def get_next_direction(self, Game):
@@ -116,6 +117,12 @@ Agent类:
 		"""
 		pass
 	
+    def button_K_e_pressed(self, Game):
+        """
+        给不同的agnet预留的自定义函数，用来调试或数据可视化。
+        """
+        pass
+        	
 	def custom_function(self, Game):
 		"""
 		给不同的agnet预留的自定义函数，用来调试或数据可视化。
@@ -126,7 +133,7 @@ Agent类:
 
 ps. 请多多编写自己的agent然后pull request
 
-### DRL_Snakey.Agent.Logic
+### DRL_Snakey.agent.Logic_AI.Logic
 
 一个简单的演示用逻辑AI，完全无视炸弹，只吃食物。具有十分简单的自身躲避算法。
 
@@ -136,9 +143,9 @@ ps. 请多多编写自己的agent然后pull request
 
 此AI在20次尝试中最好成绩为68，平均值为49.6。
 
-![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/2.gif?raw=true)
+![简易AI演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/Logic_play.gif?raw=true)
 
-### DRL_Snakey.Agent.DP
+### DRL_Snakey.agent.DP_AI.DP
 
 DP(Dynamic Programming)动态规划-马尔科夫决策法。
 
@@ -146,19 +153,40 @@ DP(Dynamic Programming)动态规划-马尔科夫决策法。
 
 构造函数参数说明:
 
-    discount: 衰减率，贝尔曼方程中对于非即时回报的衰减率。
-	iteration: 推算价值矩阵的迭代次数。
-	walk_reward: 每走一步的回报
-	eat_self_reward: 吃到自己的回报
-	food_reward: 吃到食物的回报
+* `discount`: 衰减率，贝尔曼方程中对于非即时回报的衰减率。
+* `iteration`: 推算价值矩阵的迭代次数。
+* `walk_reward`: 每走一步的回报
+* `eat_self_reward`: 吃到自己的回报
+* `food_reward`: 吃到食物的回报
 
 按F打开可视化模式后，可观察每一步动作所基于的各点价值图像。
 
 实际操作中会发现，AI可以根据价值的判断避开自身，并且在食物环境恶劣的情况下选择在安全地带迂回等待。
 
-此AI在20次尝试中最好成绩为103，平均值为59.2。
+此AI在20次尝试中最好成绩为119，平均值为69.2。
 
 ![DP演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/DP_play.gif?raw=true)
+
+### DRL_Snakey.agent.MC_AI.MC
+
+MC(Monte-Calo)蒙特卡洛法。
+
+每步分别基于某个策略循环计算三个可行方向的平均动作价值，选择平均动作价值最高的一个动
+作。本AI采取的基础策略是`DRL_Snakey.agent.Logic_AI.Logic`。
+
+构造函数参数说明:
+
+* `discount`: 衰减率
+* `iteration`: 迭代次数
+* `max_step`: 预测最大步数
+* `epsilon`: 探索率
+* `walk_reward`: 每步的回报
+* `eat_self_reward`: 吃到自己的回报
+* `food_reward`: 吃到食物的回报
+
+此AI在20次尝试中最好成绩为89，平均值为50.5。
+
+![MC演示](https://github.com/cstrikest/ML_Snakey/blob/master/images/MC_play.gif?raw=true)
 
 ## 深度强化学习 DRL AI
 

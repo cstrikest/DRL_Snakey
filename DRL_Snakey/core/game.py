@@ -27,11 +27,14 @@ class Game(object):
 		self.deathflag = False  # 死亡判定
 		self.step = 0
 	
-	def reset(self, bomb = 0, snake = Snake()):
+	def reset(self, bomb = 0, snake = None):
 		"""
 		重置游戏
 		"""
-		self.main_snake = snake
+		if snake is None:
+			self.main_snake = Snake()
+		else:
+			self.main_snake = snake
 		self.bomb_number = bomb
 		self.isfood = True  # 食物判定
 		self.bombs = []  # 炸弹数组

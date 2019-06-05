@@ -4,12 +4,11 @@ __author__ = "Yxzh"
 
 import DRL_Snakey as Snakey
 
-
+def test(agent):
+	while not game.deathflag:
+		game.next_step(agent.get_next_direction(game))
+	game.reset()
 game = Snakey.Game(0)
-agent = Snakey.agent.DP(iteration = 10, walk_reward = -0.8)
-while not game.deathflag:
-	game.next_step(agent.get_next_direction(game))
-game.reset()
-agent = Snakey.agent.Logic()
-while not game.deathflag:
-	game.next_step(agent.get_next_direction(game))
+test(Snakey.agent.Logic())
+test(Snakey.agent.DP(iteration = 3, walk_reward = -0.8))
+test(Snakey.agent.MC(iteration = 3, max_step = 3))

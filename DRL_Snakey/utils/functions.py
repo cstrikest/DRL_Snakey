@@ -2,9 +2,7 @@
 
 __author__ = "Yxzh"
 
-from random import randint
 from .directions import *
-import numpy as np
 
 
 def predict_next_position(direction, pos):

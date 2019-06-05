@@ -30,7 +30,7 @@ class Logic(Agent):
 	
 	def get_next_direction(self, game):
 		"""
-		根据环境，通过决策算法返回前进的方向。这是决定策略类中必不可少的一个函数。
+		根据环境，通过决策算法返回前进的方向。这是决策类中必不可少的一个函数。
 		:param game: 游戏
 		:return: 决定的前进方向
 		"""

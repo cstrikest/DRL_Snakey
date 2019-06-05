@@ -17,19 +17,18 @@ class MC(Agent):
 	蒙特卡洛法，基于大量随机实验，决策前进方向。
 	"""
 	
-	def __init__(self, discount = 0.95,
-	             iteration = 60,
+	def __init__(self,
+	             discount = 1,
+	             iteration = 100,
 	             max_step = 1000,
+	             epsilon = 0.05,
 	             walk_reward = -1,
-	             eat_self_reward = -60,
-	             food_reward = 80,
-	             epsilon = 0.03):
+	             eat_self_reward = -90,
+	             food_reward = 60,):
 		self.default_visual_mode = False
 		self.discount = discount
 		self.iteration = iteration
 		self.max_step = max_step
-		self.state_snake_number = 0
-		self.state_snake_max_length = 0
 		self.walk_reward = walk_reward
 		self.eat_self_reward = eat_self_reward
 		self.food_reward = food_reward
@@ -81,7 +80,6 @@ class MC(Agent):
 		for i in range(0, 3):
 			direction_set[passible_direction[i]] = direction_set[passible_direction[i]] / iteration_set[
 				passible_direction[i]]
-		print(direction_set)
 		return max(direction_set, key = direction_set.get)
 	
 	def visual_mode(self, Game, pos):
