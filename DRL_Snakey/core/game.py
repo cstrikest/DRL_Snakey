@@ -91,6 +91,8 @@ class Game(object):
 			self.ate += 1
 			self.isfood = False
 			is_ate = True
+		if self.ate == 397:  # 吃满，游戏结束
+			self.deathflag = True
 		if not self.isfood:  # 根据食物判定刷新食物
 			self.food_pos = (randint(0, PLAYGROUND_WIDTH - 1), randint(0, PLAYGROUND_HEIGHT - 1))
 			while self.food_pos in self.main_snake.snakes or self.food_pos in self.bombs:  # 避免重叠刷新
@@ -100,7 +102,7 @@ class Game(object):
 		if (self.main_snake.head_pos[0], self.main_snake.head_pos[1]) in self.bombs:  # 炸弹碰撞检测
 			self.deathflag = True
 		self.step += 1
-		if self.step > 10000:
+		if self.step == 10000:
 			self.step = 0
 		return is_ate
 	
