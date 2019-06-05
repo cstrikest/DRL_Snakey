@@ -37,8 +37,6 @@ Python版本: Python3.6或以上
 
 在使用包之前可以先运行该脚本查看游戏效果。
 
-![游戏面板](https://github.com/cstrikest/ML_Snakey/blob/master/images/game_image.png?raw=true)
-
 ### 规则
 
 人类玩家游玩时，游戏内容设有等级划分，随着获取食物的数量上升，蛇前进的速度会变快。
